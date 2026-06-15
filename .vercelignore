@@ -1,0 +1,14 @@
+# Exclude development files from Vercel's build context
+.env*
+!.env.example
+node_modules/
+dist/
+.vercel/
+test_login.js
+reset_password.js
+add_admin.js
+signup.js
+replace.js
+supabase/
+.lovable/
+README.md
