@@ -9,6 +9,6 @@ reset_password.js
 add_admin.js
 signup.js
 replace.js
-supabase/
+/supabase/
 .lovable/
 README.md
