@@ -27,7 +27,8 @@ export const Route = createFileRoute("/specs")({
         {
           property: "og:description",
           content:
-            seo?.description || "51.2V · 100Ah · 3500+ cycles · IP67. The complete spec sheet.",
+            seo?.description ||
+            "51.2V · 100Ah · 3500+ cycles · Grade A+ LFP. The complete spec sheet.",
         },
         { property: "og:type", content: "product" },
         { property: "og:url", content: seo?.canonical || "https://lohix.lovable.app/specs" },

@@ -4,8 +4,11 @@
 export const SECTIONS = [
   "global",
   "hero",
+  "trust",
   "features",
+  "stats",
   "why_lohix",
+  "warranty",
   "dealer_cta",
   "footer",
   "product",
@@ -19,8 +22,11 @@ export type SectionKey = (typeof SECTIONS)[number];
 export const SECTION_LABELS: Record<SectionKey, string> = {
   global: "Global settings",
   hero: "Landing · Hero",
+  trust: "Landing · Certification strip",
   features: "Landing · Engineered specs",
+  stats: "Landing · By the numbers",
   why_lohix: "Landing · Why LOHIX",
+  warranty: "Landing · Warranty registration",
   dealer_cta: "Landing · Dealer CTA",
   footer: "Footer",
   product: "Product page · Lohix Energy",
@@ -32,8 +38,13 @@ export const SECTION_LABELS: Record<SectionKey, string> = {
 export const SECTION_DESCRIPTIONS: Record<SectionKey, string> = {
   global: "Logo, brand colour, contact details — used site-wide.",
   hero: "Landing hero — chip, headline, subline, CTAs, background video, trust strip.",
+  trust:
+    "Scrolling certification strip. Only list claims you can evidence — every item here is a public product claim.",
   features: "Engineered specs section — 9 spec tiles with category filters.",
+  stats:
+    "'By the numbers' counters. Values animate up on scroll — write them as plain numbers with a unit, e.g. '3500+' or '5.12kWh'.",
   why_lohix: "Why LOHIX section — eyebrow, headline, four value cards.",
+  warranty: "Warranty registration block — heading, intro copy, and the coverage checklist.",
   dealer_cta: "Become a dealer block — copy, bullet points, form labels.",
   footer: "Footer — tagline, link groups, copyright, slogan.",
   product: "/product page — hero image, overview, features, specs, CTA.",
@@ -61,6 +72,28 @@ export type HeroContent = {
   ctaPrimary: { label: string; href: string };
   ctaSecondary: { label: string; href: string };
   trustItems: string[];
+};
+
+export type TrustContent = {
+  eyebrow: string;
+  items: string[];
+};
+
+export type StatItem = { value: string; label: string; sub?: string };
+export type StatsContent = {
+  eyebrow: string;
+  headingPrefix: string;
+  headingHighlight: string;
+  items: StatItem[];
+};
+
+export type WarrantyContent = {
+  eyebrow: string;
+  headingPrefix: string;
+  headingHighlight: string;
+  headingSuffix: string;
+  body: string;
+  bullets: string[];
 };
 
 export type FeatureItem = {
@@ -242,7 +275,42 @@ export const heroDefault: HeroContent = {
     "A smart 51.2V LFP battery engineered for e-rickshaws and EVs across Eastern India. 3500+ cycles. Real BMS protection. Local service.",
   ctaPrimary: { label: "Register warranty", href: "#warranty" },
   ctaSecondary: { label: "Explore specs", href: "#features" },
-  trustItems: ["Live BMS · 24/7", "IP67 sealed", "3500+ cycles", "Made in India"],
+  trustItems: [
+    "Live BMS · 24/7",
+    "IP67 design · certification pending",
+    "3500+ cycles",
+    "Made in India",
+  ],
+};
+
+export const trustDefault: TrustContent = {
+  eyebrow: "Built in India, on certified cells",
+  items: ["BIS Certified Cells (R-41147877)", "Made in India", "Grade A+ LFP"],
+};
+
+export const statsDefault: StatsContent = {
+  eyebrow: "By the numbers",
+  headingPrefix: "Engineered to outlast",
+  headingHighlight: "every charge.",
+  items: [
+    { value: "3500+", label: "Charge cycles", sub: "LFP chemistry, long life" },
+    { value: "5.12kWh", label: "Usable energy", sub: "51.2V × 100Ah" },
+    { value: "51.2V", label: "Nominal voltage", sub: "100Ah smart pack" },
+    { value: "100Ah", label: "Rated capacity", sub: "Grade A+ LFP cells" },
+  ],
+};
+
+export const warrantyDefault: WarrantyContent = {
+  eyebrow: "Warranty registration",
+  headingPrefix: "Activate your",
+  headingHighlight: "LOHIX",
+  headingSuffix: "warranty.",
+  body: "Register within 30 days of purchase to unlock your full warranty coverage and priority service.",
+  bullets: [
+    "3-year coverage on cells and BMS — standard variant",
+    "4-year coverage on cells and BMS — GPS variant",
+    "Priority on-ground service in East India",
+  ],
 };
 
 export const featuresDefault: FeaturesContent = {
@@ -297,10 +365,10 @@ export const featuresDefault: FeaturesContent = {
     {
       id: "ip",
       label: "Ingress",
-      value: "IP",
-      unit: "54",
-      title: "Dust & splash resistant",
-      body: "Sealed enclosure rated for monsoon roads and dusty depots.",
+      value: "IP67",
+      unit: "design",
+      title: "Sealed for monsoon roads",
+      body: "Enclosure engineered to an IP67 design standard for dust and water ingress. Third-party certification is pending.",
       icon: "Shield",
       category: "Safety",
     },
@@ -319,17 +387,17 @@ export const featuresDefault: FeaturesContent = {
       value: "200",
       unit: "A",
       title: "High-torque discharge",
-      body: "200A peak discharge — handles hills and overload with headroom.",
+      body: "200A momentary peak discharge for hill starts and overload — not a continuous rating.",
       icon: "TrendingUp",
       category: "Power",
     },
     {
       id: "warranty",
       label: "Warranty",
-      value: "3",
+      value: "3–4",
       unit: "yr",
       title: "Backed for the long haul",
-      body: "3-year warranty serviced locally from our Kolkata facility.",
+      body: "3 years on the standard pack, 4 years on GPS variants — serviced locally from our Kolkata facility.",
       icon: "BadgeCheck",
       category: "Origin",
     },
@@ -389,7 +457,7 @@ export const dealerCtaDefault: DealerCtaContent = {
 export const footerDefault: FooterContent = {
   tagline:
     "Power. Performance. Possibilities. Smart LFP batteries built for the roads of Eastern India.",
-  copyright: "© 2025 Aishwarya Nirman Private Limited. All rights reserved.",
+  copyright: "© 2026 Aishwarya Nirman Private Limited. All rights reserved.",
   slogan: "Built Smart. Built Safe. Built LOHIX.",
   productLinks: [
     { label: "Lohix Energy", href: "/product" },
@@ -411,14 +479,14 @@ export const productDefault: ProductContent = {
     { k: "51.2 V", v: "Output" },
     { k: "100 Ah", v: "Capacity" },
     { k: "3500+", v: "Life cycles" },
-    { k: "IP67", v: "Rated" },
+    { k: "IP67", v: "Design" },
   ],
   ctaPrimary: { label: "Register warranty", href: "/#warranty" },
   ctaSecondary: { label: "Find a dealer", href: "/#dealer" },
   overviewHeading: "A premium LFP system, built for daily duty.",
   overviewParagraphs: [
     "Lohix Energy is a high-performance Lithium Iron Phosphate (LiFePO4) battery system engineered specifically for India's evolving electric mobility ecosystem. Built for e-rickshaw applications, the battery delivers a 48V nominal voltage with a powerful 51.2V output and 100Ah capacity — ensuring reliable performance, longer operational life, and efficient energy delivery.",
-    "Equipped with advanced Smart BMS protection, fast charging compatibility, and high-temperature resilience, the system is designed for durability, safety, and consistent power management under demanding conditions. With an IP67 waterproof rating and an industrial-grade build, Lohix Energy is maintenance-free and capable of delivering 3500+ life cycles.",
+    "Equipped with advanced Smart BMS protection, fast charging compatibility, and high-temperature resilience, the system is designed for durability, safety, and consistent power management under demanding conditions. Built to an IP67 design standard (certification pending) on BIS-certified Grade A+ cells, Lohix Energy is maintenance-free and capable of delivering 3500+ life cycles.",
   ],
   useCases: [
     "E-Rickshaw fleets",
@@ -452,8 +520,8 @@ export const productDefault: ProductContent = {
     },
     {
       icon: "Droplets",
-      title: "IP67 Waterproof",
-      body: "Sealed industrial enclosure built to survive rain, dust, and rough road conditions.",
+      title: "IP67 Design",
+      body: "Sealed industrial enclosure engineered to an IP67 design standard for rain, dust, and rough roads. Certification pending.",
     },
     {
       icon: "Factory",
@@ -465,7 +533,7 @@ export const productDefault: ProductContent = {
   specBadges: [
     { icon: "Battery", label: "LFP Chemistry" },
     { icon: "Gauge", label: "Smart Monitoring" },
-    { icon: "ShieldCheck", label: "Safety Certified" },
+    { icon: "ShieldCheck", label: "BIS Certified Cells" },
   ],
   specGroups: [
     {
@@ -489,8 +557,9 @@ export const productDefault: ProductContent = {
     {
       title: "Build & safety",
       rows: [
-        { label: "Protection", value: "IP67" },
+        { label: "Protection", value: "IP67 design (cert. pending)" },
         { label: "BMS", value: "Smart, multi-layer" },
+        { label: "Cell certification", value: "BIS R-41147877" },
         { label: "Operating temp", value: "−10° to 60°C" },
         { label: "Origin", value: "Made in India" },
       ],
@@ -631,7 +700,7 @@ export const dealerDefault: DealerContent = {
     {
       icon: "ShieldCheck",
       title: "Warranty backed locally",
-      body: "3-year warranty serviced from Kolkata. Fast claim turnaround, parts on the shelf.",
+      body: "3-year warranty (4 years on GPS variants) serviced from Kolkata. Fast claim turnaround, parts on the shelf.",
     },
   ],
   stepsEyebrow: "How it works",
@@ -703,7 +772,7 @@ export const specsDefault: SpecsContent = {
   seo: {
     title: "Lohix Energy Specs — Full Datasheet & LFP vs Lead-acid Comparison",
     description:
-      "Complete Lohix Energy datasheet: 51.2V, 100Ah, 3500+ cycles, IP67, smart BMS. Compare LFP vs lead-acid side-by-side.",
+      "Complete Lohix Energy datasheet: 51.2V, 100Ah, 3500+ cycles, smart BMS, BIS-certified Grade A+ LFP cells. Compare LFP vs lead-acid side-by-side.",
     ogImage: "/logo_lohix.png",
     canonical: "https://lohix.lovable.app/specs",
   },
@@ -729,7 +798,7 @@ export const specsDefault: SpecsContent = {
     { k: "Maintenance", a: "Monthly top-up", b: "Zero" },
     { k: "Charge time", a: "8–10 hrs", b: "2–3 hrs" },
     { k: "Thermal safety", a: "Vented acid", b: "Smart BMS + LFP" },
-    { k: "Ingress rating", a: "—", b: "IP67" },
+    { k: "Ingress rating", a: "—", b: "IP67 design (cert. pending)" },
   ],
   ctaEyebrow: "Ready for the field",
   ctaHeading: "See the Lohix Energy in your fleet.",
@@ -740,8 +809,11 @@ export const specsDefault: SpecsContent = {
 export const DEFAULTS = {
   global: globalDefault,
   hero: heroDefault,
+  trust: trustDefault,
   features: featuresDefault,
+  stats: statsDefault,
   why_lohix: whyLohixDefault,
+  warranty: warrantyDefault,
   dealer_cta: dealerCtaDefault,
   footer: footerDefault,
   product: productDefault,
@@ -753,8 +825,11 @@ export const DEFAULTS = {
 export type ContentMap = {
   global: GlobalContent;
   hero: HeroContent;
+  trust: TrustContent;
   features: FeaturesContent;
+  stats: StatsContent;
   why_lohix: WhyLohixContent;
+  warranty: WarrantyContent;
   dealer_cta: DealerCtaContent;
   footer: FooterContent;
   product: ProductContent;

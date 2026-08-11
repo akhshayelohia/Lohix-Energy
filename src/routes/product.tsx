@@ -16,13 +16,13 @@ export const Route = createFileRoute("/product")({
       {
         name: "description",
         content:
-          "Lohix Energy — A 51.2V 100Ah Lithium Iron Phosphate battery engineered for e-rickshaws and India's electric mobility ecosystem. 3500+ cycles, smart BMS, IP67.",
+          "Lohix Energy — A 51.2V 100Ah Lithium Iron Phosphate battery engineered for e-rickshaws and India's electric mobility ecosystem. 3500+ cycles, smart BMS, BIS-certified Grade A+ cells.",
       },
       { property: "og:title", content: "Lohix Energy — Smart LFP Battery" },
       {
         property: "og:description",
         content:
-          "Built Smart. Built Safe. Built LOHIX. 51.2V · 100Ah · 3500+ cycles · IP67 · Made in India.",
+          "Built Smart. Built Safe. Built LOHIX. 51.2V · 100Ah · 3500+ cycles · Grade A+ LFP · Made in India.",
       },
       { property: "og:url", content: "https://lohix.lovable.app/product" },
       { property: "og:type", content: "product" },
@@ -92,10 +92,10 @@ function ProductPage() {
                 SYS / LOHIX-48
               </div>
               <div className="absolute top-3 right-3 sm:top-5 sm:right-5 text-[9px] sm:text-[10px] tracking-[0.22em] uppercase text-white/50">
-                v1.0 · 2025
+                v1.0 · 2026
               </div>
               <div className="absolute bottom-3 left-3 sm:bottom-5 sm:left-5 text-[9px] sm:text-[10px] tracking-[0.22em] uppercase text-white/50">
-                LiFePO4 · IP67
+                LiFePO4 · Grade A+
               </div>
               <div className="absolute bottom-3 right-3 sm:bottom-5 sm:right-5 flex items-center gap-1.5 text-[9px] sm:text-[10px] tracking-[0.22em] uppercase text-white/50">
                 <span className="w-1.5 h-1.5 rounded-full bg-lohix-lime pulse-dot" />

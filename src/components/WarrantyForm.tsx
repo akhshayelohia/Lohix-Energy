@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { z } from "zod";
 import { ShieldCheck, Check, ArrowRight, AlertCircle, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useContent } from "@/cms/useContent";
 
 const schema = z.object({
   fullName: z.string().trim().min(2, "Enter your full name").max(80),
@@ -51,6 +52,7 @@ const STATES = ["West Bengal", "Bihar", "Jharkhand", "Odisha", "Assam", "Sikkim"
 const VEHICLES = ["E-Rickshaw", "E-Loader", "E-Auto", "EV 2W", "Other"];
 
 export function WarrantyForm() {
+  const copy = useContent("warranty");
   const [form, setForm] = useState<FormState>(initial);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -112,22 +114,16 @@ export function WarrantyForm() {
           <div className="lg:sticky lg:top-28 self-start">
             <div className="pill inline-flex items-center gap-2 px-3 py-1 hairline bg-paper-2 text-[10px] uppercase tracking-[0.2em] text-muted-ink">
               <ShieldCheck className="w-3 h-3 text-lohix-green" />
-              Warranty registration
+              {copy.eyebrow}
             </div>
             <h2 className="mt-5 font-sans text-[32px] sm:text-[40px] md:text-[52px] leading-[1] tracking-[-0.03em] uppercase font-bold">
-              Activate your <span className="text-lohix-green">LOHIX</span> warranty.
+              {copy.headingPrefix} <span className="text-lohix-green">{copy.headingHighlight}</span>{" "}
+              {copy.headingSuffix}
             </h2>
-            <p className="mt-4 text-[14px] text-muted-ink max-w-md leading-relaxed">
-              Register within 30 days of purchase to unlock the full 3-year warranty, priority
-              service, and over-the-air BMS updates.
-            </p>
+            <p className="mt-4 text-[14px] text-muted-ink max-w-md leading-relaxed">{copy.body}</p>
 
             <ul className="mt-8 space-y-3">
-              {[
-                "3-year coverage on cells and BMS",
-                "Priority on-ground service in East India",
-                "Free firmware updates for the life of the pack",
-              ].map((p) => (
+              {copy.bullets.map((p) => (
                 <li key={p} className="flex items-start gap-2.5 text-[13px] text-ink/80">
                   <span className="mt-1 w-3.5 h-3.5 rounded-full bg-lohix-lime/30 flex items-center justify-center shrink-0">
                     <Check className="w-2 h-2 text-lohix-green" />

@@ -124,6 +124,18 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
     },
   ],
 
+  trust: [
+    { key: "eyebrow", label: "Eyebrow (small caps line above the strip)", type: "text" },
+    {
+      key: "items",
+      label: "Certification claims",
+      type: "list",
+      itemType: "text",
+      itemLabel: "Claim",
+      help: "Public product claims. Only add a line once you hold the certificate or test report for it — remove anything that lapses.",
+    },
+  ],
+
   features: [
     { key: "eyebrow", label: "Eyebrow", type: "text" },
     { key: "headingPrefix", label: "Heading · prefix", type: "text" },
@@ -156,6 +168,34 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
     },
   ],
 
+  stats: [
+    { key: "eyebrow", label: "Eyebrow", type: "text" },
+    { key: "headingPrefix", label: "Heading · prefix", type: "text" },
+    {
+      key: "headingHighlight",
+      label: "Heading · highlighted",
+      type: "text",
+      help: "Rendered in the accent colour, italic.",
+    },
+    {
+      key: "items",
+      label: "Counters",
+      type: "list",
+      itemType: "group",
+      itemLabel: "Counter",
+      fields: [
+        {
+          key: "value",
+          label: "Value",
+          type: "text",
+          help: "Number first, then the unit — e.g. '3500+', '5.12kWh', '51.2V'. The number animates up on scroll; the unit stays put.",
+        },
+        { key: "label", label: "Label", type: "text" },
+        { key: "sub", label: "Sub-label (optional)", type: "text" },
+      ],
+    },
+  ],
+
   why_lohix: [
     { key: "eyebrow", label: "Eyebrow", type: "text" },
     { key: "headingPrefix", label: "Heading · prefix", type: "text" },
@@ -173,6 +213,27 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
         { key: "title", label: "Title", type: "text" },
         { key: "body", label: "Body", type: "textarea", rows: 2 },
       ],
+    },
+  ],
+
+  warranty: [
+    { key: "eyebrow", label: "Eyebrow (pill above the heading)", type: "text" },
+    { key: "headingPrefix", label: "Heading · prefix", type: "text" },
+    {
+      key: "headingHighlight",
+      label: "Heading · highlighted",
+      type: "text",
+      help: "Rendered in the accent colour.",
+    },
+    { key: "headingSuffix", label: "Heading · suffix", type: "text" },
+    { key: "body", label: "Intro copy", type: "textarea", rows: 3 },
+    {
+      key: "bullets",
+      label: "Coverage checklist",
+      type: "list",
+      itemType: "text",
+      itemLabel: "Point",
+      help: "What the warranty actually covers. Keep standard and GPS variants distinct.",
     },
   ],
 

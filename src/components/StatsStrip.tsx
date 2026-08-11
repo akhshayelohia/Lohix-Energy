@@ -1,17 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { Reveal } from "./Reveal";
+import { useContent } from "@/cms/useContent";
 
-type Stat = { value: number; suffix?: string; label: string; sub?: string };
+/**
+ * Splits a CMS value like "5.12kWh" into the number that animates (5.12),
+ * the unit that stays put ("kWh"), and how many decimals to hold while
+ * counting so 5.12 never renders as "5.1".
+ */
+function parseStatValue(raw: string): { target: number; suffix: string; decimals: number } {
+  const match = /^\s*(-?\d[\d,]*(?:\.\d+)?)(.*)$/.exec(raw ?? "");
+  if (!match) return { target: 0, suffix: raw ?? "", decimals: 0 };
+  const [, numeric, rest] = match;
+  const target = Number(numeric.replace(/,/g, ""));
+  if (!Number.isFinite(target)) return { target: 0, suffix: raw, decimals: 0 };
+  return { target, suffix: rest, decimals: (numeric.split(".")[1] ?? "").length };
+}
 
-const STATS: Stat[] = [
-  { value: 3500, suffix: "+", label: "Charge cycles", sub: "LFP chemistry, long life" },
-  { value: 99.2, suffix: "%", label: "Uptime in field", sub: "Across 18 cities" },
-  { value: 51.2, suffix: "V", label: "Nominal voltage", sub: "100Ah smart pack" },
-  { value: 8, suffix: "yr", label: "Design life", sub: "Backed by warranty" },
-];
-
-function CountUp({ to, suffix }: { to: number; suffix?: string }) {
+function CountUp({ to, suffix, decimals }: { to: number; suffix: string; decimals: number }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const reduce = useReducedMotion();
@@ -36,7 +42,11 @@ function CountUp({ to, suffix }: { to: number; suffix?: string }) {
     return () => cancelAnimationFrame(raf);
   }, [inView, to, reduce]);
 
-  const display = Number.isInteger(to) ? Math.round(n).toLocaleString() : n.toFixed(1);
+  const display = n.toLocaleString(undefined, {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+
   return (
     <span ref={ref}>
       {display}
@@ -46,6 +56,8 @@ function CountUp({ to, suffix }: { to: number; suffix?: string }) {
 }
 
 export function StatsStrip() {
+  const c = useContent("stats");
+
   return (
     <section className="w-full bg-ink text-paper-2 px-5 sm:px-6 py-16 sm:py-20 relative overflow-hidden">
       <div
@@ -61,29 +73,32 @@ export function StatsStrip() {
         <Reveal className="max-w-2xl">
           <div className="inline-flex items-center gap-2 pill border border-white/15 bg-white/[0.04] px-3 py-1 text-xxs uppercase tracking-[0.2em] text-white/60">
             <span className="w-1 h-1 rounded-full bg-lohix-lime pulse-dot" />
-            By the numbers
+            {c.eyebrow}
           </div>
           <h2 className="mt-5 font-sans text-[32px] sm:text-[44px] md:text-[56px] leading-[1.02] tracking-[-0.03em]">
-            Engineered to outlast <em className="italic text-lohix-lime">every charge.</em>
+            {c.headingPrefix} <em className="italic text-lohix-lime">{c.headingHighlight}</em>
           </h2>
         </Reveal>
         <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-px bg-white/10 rounded-2xl overflow-hidden border border-white/10">
-          {STATS.map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="bg-ink p-6 sm:p-8"
-            >
-              <div className="font-sans text-[34px] sm:text-[44px] leading-none tracking-[-0.03em] text-lohix-lime">
-                <CountUp to={s.value} suffix={s.suffix} />
-              </div>
-              <div className="mt-3 text-[13px] font-medium">{s.label}</div>
-              {s.sub && <div className="mt-1 text-[11px] text-white/50">{s.sub}</div>}
-            </motion.div>
-          ))}
+          {c.items.map((s, i) => {
+            const { target, suffix, decimals } = parseStatValue(s.value);
+            return (
+              <motion.div
+                key={`${s.label}-${i}`}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="bg-ink p-6 sm:p-8"
+              >
+                <div className="font-sans text-[34px] sm:text-[44px] leading-none tracking-[-0.03em] text-lohix-lime">
+                  <CountUp to={target} suffix={suffix} decimals={decimals} />
+                </div>
+                <div className="mt-3 text-[13px] font-medium">{s.label}</div>
+                {s.sub && <div className="mt-1 text-[11px] text-white/50">{s.sub}</div>}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
