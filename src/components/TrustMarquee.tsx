@@ -10,21 +10,19 @@ export function TrustMarquee() {
   if (c.items.length === 0) return null;
 
   return (
-    <section className="w-full bg-paper border-y border-line py-10 overflow-hidden">
-      <Reveal className="max-w-6xl mx-auto px-5 sm:px-6">
-        <p className="text-xxs uppercase tracking-[0.25em] text-muted-ink text-center">
+    <section className="section-sm overflow-hidden border-b border-line bg-paper">
+      <Reveal className="container-x flex justify-center">
+        <p className="t-label inline-flex items-center gap-2.5 text-muted-ink">
+          <span className="h-1.5 w-1.5 rounded-full bg-lohix-lime" />
           {c.eyebrow}
         </p>
       </Reveal>
-      <div className="mt-6 relative">
-        <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-paper to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-paper to-transparent z-10 pointer-events-none" />
-        <div className="flex gap-3 animate-marquee whitespace-nowrap w-max">
+      <div className="relative mt-7">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-paper to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-paper to-transparent" />
+        <div className="flex w-max gap-3 whitespace-nowrap animate-marquee">
           {track.map((t, i) => (
-            <span
-              key={`${t}-${i}`}
-              className="pill hairline bg-paper-2 px-4 py-2 text-[12px] font-medium text-ink/80 tracking-wide"
-            >
+            <span key={`${t}-${i}`} className="chip px-4 py-2 text-[13px] font-medium text-ink/80">
               {t}
             </span>
           ))}

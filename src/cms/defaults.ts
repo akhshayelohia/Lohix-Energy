@@ -1,56 +1,113 @@
 // Central source of truth for all editable site content.
 // Frontend components read merged values from useContent(); admin edits fields.
 
+import { productsTwoWheelerDefault, type TwoWheelerContent } from "./products2w";
+
 export const SECTIONS = [
   "global",
+  "footer",
+  "buy_dialog",
   "hero",
   "trust",
   "features",
+  "range",
   "stats",
   "why_lohix",
   "warranty",
   "dealer_cta",
-  "footer",
+  "products_page",
   "product",
+  "products_2w",
+  "specs",
   "about",
   "dealer",
-  "specs",
 ] as const;
 
 export type SectionKey = (typeof SECTIONS)[number];
 
 export const SECTION_LABELS: Record<SectionKey, string> = {
   global: "Global settings",
-  hero: "Landing · Hero",
-  trust: "Landing · Certification strip",
-  features: "Landing · Engineered specs",
-  stats: "Landing · By the numbers",
-  why_lohix: "Landing · Why LOHIX",
-  warranty: "Landing · Warranty registration",
-  dealer_cta: "Landing · Dealer CTA",
   footer: "Footer",
-  product: "Product page · Lohix Energy",
+  buy_dialog: "Where to buy pop-up",
+  hero: "Hero",
+  trust: "Certification strip",
+  features: "Engineered specs",
+  range: "The range",
+  stats: "By the numbers",
+  why_lohix: "Why LOHIX",
+  warranty: "Warranty registration",
+  dealer_cta: "Dealer CTA",
+  products_page: "All products page",
+  product: "LOHIX 48 · e-rickshaw",
+  products_2w: "2W batteries",
+  specs: "Specs page",
   about: "About page",
   dealer: "Dealer page",
-  specs: "Specs page",
+};
+
+// Sidebar grouping in the admin studio.
+export const SECTION_GROUPS: { label: string; sections: SectionKey[] }[] = [
+  { label: "Site-wide", sections: ["global", "footer", "buy_dialog"] },
+  {
+    label: "Landing page",
+    sections: [
+      "hero",
+      "trust",
+      "features",
+      "range",
+      "stats",
+      "why_lohix",
+      "warranty",
+      "dealer_cta",
+    ],
+  },
+  { label: "Products", sections: ["products_page", "product", "products_2w", "specs"] },
+  { label: "Company", sections: ["about", "dealer"] },
+];
+
+// Where each section can be seen on the public site ("View on site" in the studio).
+export const SECTION_PATHS: Record<SectionKey, string> = {
+  global: "/",
+  footer: "/",
+  buy_dialog: "/#buy",
+  hero: "/",
+  trust: "/",
+  features: "/#features",
+  range: "/",
+  stats: "/",
+  why_lohix: "/",
+  warranty: "/#warranty",
+  dealer_cta: "/#dealer",
+  products_page: "/products",
+  product: "/product",
+  products_2w: "/products#2w",
+  specs: "/specs",
+  about: "/about",
+  dealer: "/dealer",
 };
 
 export const SECTION_DESCRIPTIONS: Record<SectionKey, string> = {
-  global: "Logo, brand colour, contact details — used site-wide.",
-  hero: "Landing hero — chip, headline, subline, CTAs, background video, trust strip.",
+  global: "Logo, brand colour, contact email and phone — used site-wide.",
+  footer: "Tagline, dealer button, Explore links, contact lines, copyright.",
+  buy_dialog:
+    "The pop-up every 'Where to buy' / #buy link opens. Phone numbers come from the footer contact lines and the global phone.",
+  hero: "Chip, headline, subline, CTAs, background video, trust strip.",
   trust:
     "Scrolling certification strip. Only list claims you can evidence — every item here is a public product claim.",
-  features: "Engineered specs section — 9 spec tiles with category filters.",
+  features: "Nine spec tiles with category filters.",
+  range: "Two category cards linking to the products page.",
   stats:
-    "'By the numbers' counters. Values animate up on scroll — write them as plain numbers with a unit, e.g. '3500+' or '5.12kWh'.",
-  why_lohix: "Why LOHIX section — eyebrow, headline, four value cards.",
-  warranty: "Warranty registration block — heading, intro copy, and the coverage checklist.",
-  dealer_cta: "Become a dealer block — copy, bullet points, form labels.",
-  footer: "Footer — tagline, link groups, copyright, slogan.",
-  product: "/product page — hero image, overview, features, specs, CTA.",
-  about: "/about page — hero, mission, stats, timeline, values, facility.",
-  dealer: "/dealer page — hero, benefits, steps, cities marquee, FAQs.",
-  specs: "/specs page — hero, comparison table, bottom CTA.",
+    "Counters that animate up on scroll — write values as a number with a unit, e.g. '3500+' or '5.12kWh'.",
+  why_lohix: "Eyebrow, headline, four value cards.",
+  warranty: "Heading, intro copy, and the coverage checklist.",
+  dealer_cta: "Copy, bullet points, form labels.",
+  products_page:
+    "/products — SEO, hero, category copy, comparison, estimator, CTA. Also the section titles shared by every product page.",
+  product: "/product — showcase media, name, key figures, overview, features, spec sheet, CTA.",
+  products_2w: "Shared copy, feature cards and CTA, plus one entry per model (/products/<slug>).",
+  specs: "/specs — SEO, hero, spec explorer, comparison table, CTA.",
+  about: "/about — SEO, hero & CTAs, mission & stats, timeline, values, facility.",
+  dealer: "/dealer — SEO, hero, benefits, onboarding steps, city step, FAQs.",
 };
 
 export type GlobalContent = {
@@ -63,6 +120,7 @@ export type GlobalContent = {
 
 export type HeroContent = {
   videoUrl: string;
+  videoUrlMobile: string;
   chipBadge: string;
   chipText: string;
   headlineLine1: string;
@@ -140,6 +198,9 @@ export type DealerCtaContent = {
 
 export type FooterContent = {
   tagline: string;
+  dealerButton: { label: string; href: string };
+  exploreHeading: string;
+  contactHeading: string;
   copyright: string;
   slogan: string;
   productLinks: { label: string; href: string }[];
@@ -148,7 +209,6 @@ export type FooterContent = {
 
 export type ProductContent = {
   heroImage: string;
-  breadcrumb: string;
   eyebrow: string;
   titleMain: string;
   titleAccent: string;
@@ -169,6 +229,7 @@ export type ProductContent = {
   ctaHeading: string;
   ctaHighlight: string;
   ctaBody: string;
+  datasheetUrl: string;
 };
 
 export type SeoMeta = {
@@ -180,12 +241,13 @@ export type SeoMeta = {
 
 export type AboutContent = {
   seo: SeoMeta;
-  breadcrumb: string;
   heroEyebrow: string;
   heroTitlePrefix: string;
   heroTitleHighlight: string;
   heroTitleSuffix: string;
   heroBody: string;
+  heroCtaPrimary: { label: string; href: string };
+  heroCtaSecondary: { label: string; href: string };
   missionEyebrow: string;
   missionHeadingPrefix: string;
   missionHeadingHighlight: string;
@@ -211,7 +273,6 @@ export type AboutContent = {
 
 export type DealerContent = {
   seo: SeoMeta;
-  breadcrumb: string;
   heroEyebrow: string;
   heroTitlePrefix: string;
   heroTitleHighlight: string;
@@ -225,8 +286,13 @@ export type DealerContent = {
   stepsEyebrow: string;
   stepsHeading: string;
   steps: { n: string; t: string; b: string }[];
-  citiesLabel: string;
-  cities: string[];
+  cityEyebrow: string;
+  cityHeading: string;
+  cityBody: string;
+  cityQuestion: string;
+  cityHint: string;
+  cityPlaceholder: string;
+  cityButton: string;
   faqEyebrow: string;
   faqHeading: string;
   faqs: { q: string; a: string }[];
@@ -234,7 +300,6 @@ export type DealerContent = {
 
 export type SpecsContent = {
   seo: SeoMeta;
-  breadcrumb: string;
   heroEyebrow: string;
   heroTitlePrefix: string;
   heroTitleHighlight: string;
@@ -243,8 +308,11 @@ export type SpecsContent = {
   explorerHint: string;
   datasheetEyebrow: string;
   datasheetHeading: string;
+  datasheetBody: string;
   datasheetDownloadLabel: string;
   datasheetDownloadHref: string;
+  datasheetViewLabel: string;
+  twoWheelerCtaLabel: string;
   comparisonEyebrow: string;
   comparisonHeading: string;
   comparisonColA: string;
@@ -266,6 +334,7 @@ export const globalDefault: GlobalContent = {
 
 export const heroDefault: HeroContent = {
   videoUrl: "",
+  videoUrlMobile: "",
   chipBadge: "NEW",
   chipText: "Register your Lohix Energy warranty",
   headlineLine1: "Power that moves",
@@ -448,7 +517,7 @@ export const dealerCtaDefault: DealerCtaContent = {
   eyebrow: "Become a dealer",
   headingPrefix: "Grow with",
   headingHighlight: "LOHIX",
-  body: "Join our distributor network across Eastern India. Training, healthy margins, and on-ground support — built in.",
+  body: "Partner with LOHIX to sell smart LFP batteries in your city. Training, healthy margins, and on-ground support — built in.",
   benefits: ["Healthy unit economics", "Dedicated regional manager", "Co-marketing & training"],
   buttonLabel: "Request dealership",
   footnote: "We'll reach out within 48 hours.",
@@ -457,6 +526,9 @@ export const dealerCtaDefault: DealerCtaContent = {
 export const footerDefault: FooterContent = {
   tagline:
     "Power. Performance. Possibilities. Smart LFP batteries built for the roads of Eastern India.",
+  dealerButton: { label: "Become a dealer", href: "/dealer" },
+  exploreHeading: "Explore",
+  contactHeading: "Contact",
   copyright: "© 2026 Aishwarya Nirman Private Limited. All rights reserved.",
   slogan: "Built Smart. Built Safe. Built LOHIX.",
   productLinks: [
@@ -469,7 +541,6 @@ export const footerDefault: FooterContent = {
 
 export const productDefault: ProductContent = {
   heroImage: "",
-  breadcrumb: "Lohix Energy",
   eyebrow: "Lithium energy system · LiFePO4",
   titleMain: "LOHIX",
   titleAccent: "48",
@@ -570,6 +641,7 @@ export const productDefault: ProductContent = {
   ctaHighlight: "Built LOHIX.",
   ctaBody:
     "Register your Lohix Energy warranty or connect with an authorized dealer to power your fleet today.",
+  datasheetUrl: "",
 };
 
 export const aboutDefault: AboutContent = {
@@ -577,16 +649,17 @@ export const aboutDefault: AboutContent = {
     title: "About — LOHIX Energy",
     description:
       "Built in Kolkata, engineered for India. The story, mission, and people behind LOHIX smart LFP batteries.",
-    ogImage: "/logo_lohix.png",
-    canonical: "https://lohix.lovable.app/about",
+    ogImage: "/og-image.jpg",
+    canonical: "https://lohixenergy.com/about",
   },
-  breadcrumb: "About",
   heroEyebrow: "About LOHIX",
   heroTitlePrefix: "Built for the",
   heroTitleHighlight: "roads",
   heroTitleSuffix: "we ride on.",
   heroBody:
     "LOHIX is a Kolkata-born energy company building smart LFP batteries for India's electric mobility — engineered, assembled, and serviced locally.",
+  heroCtaPrimary: { label: "Explore our batteries", href: "/products" },
+  heroCtaSecondary: { label: "Become a dealer", href: "/dealer" },
   missionEyebrow: "Mission",
   missionHeadingPrefix: "Power that earns its keep —",
   missionHeadingHighlight: "every cycle, every shift.",
@@ -663,14 +736,13 @@ export const aboutDefault: AboutContent = {
 
 export const dealerDefault: DealerContent = {
   seo: {
-    title: "Become a LOHIX Dealer — Distributor Network",
+    title: "Become a LOHIX Dealer — Partner Program",
     description:
       "Become a LOHIX channel partner. Healthy margins, regional support, warranty serviced locally from Kolkata.",
-    ogImage: "/logo_lohix.png",
-    canonical: "https://lohix.lovable.app/dealer",
+    ogImage: "/og-image.jpg",
+    canonical: "https://lohixenergy.com/dealer",
   },
-  breadcrumb: "Dealer",
-  heroEyebrow: "Distributor network · Eastern India",
+  heroEyebrow: "Dealer partnership",
   heroTitlePrefix: "Grow with",
   heroTitleHighlight: "LOHIX",
   heroBody:
@@ -727,21 +799,13 @@ export const dealerDefault: DealerContent = {
       b: "We co-launch in your market with collateral, demo packs, and lead support.",
     },
   ],
-  citiesLabel: "Active & opening soon",
-  cities: [
-    "Kolkata",
-    "Howrah",
-    "Asansol",
-    "Durgapur",
-    "Siliguri",
-    "Patna",
-    "Ranchi",
-    "Bhubaneswar",
-    "Cuttack",
-    "Guwahati",
-    "Jamshedpur",
-    "Berhampur",
-  ],
+  cityEyebrow: "Your city",
+  cityHeading: "Tell us where you operate.",
+  cityBody: "Add your city and it carries straight into the application form below.",
+  cityQuestion: "Which city do you operate in?",
+  cityHint: "We'll carry it straight into your application below.",
+  cityPlaceholder: "Your city",
+  cityButton: "Apply for",
   faqEyebrow: "Frequently asked",
   faqHeading: "Questions, answered.",
   faqs: [
@@ -754,8 +818,8 @@ export const dealerDefault: DealerContent = {
       a: "Yes — we work with stocking partners. Initial stock requirements depend on your zone and projected volume, discussed during onboarding.",
     },
     {
-      q: "Are territories protected?",
-      a: "We allocate primary zones to avoid channel conflict. Sub-dealer expansion happens with your involvement.",
+      q: "How are territories handled?",
+      a: "We agree the area you'll serve with you during onboarding, so both sides are clear before you go live.",
     },
     {
       q: "How fast is warranty service?",
@@ -770,24 +834,27 @@ export const dealerDefault: DealerContent = {
 
 export const specsDefault: SpecsContent = {
   seo: {
-    title: "Lohix Energy Specs — Full Datasheet & LFP vs Lead-acid Comparison",
+    title: "LOHIX Specs — E-Rickshaw & 2W LiFePO4 Battery Datasheets",
     description:
-      "Complete Lohix Energy datasheet: 51.2V, 100Ah, 3500+ cycles, smart BMS, BIS-certified Grade A+ LFP cells. Compare LFP vs lead-acid side-by-side.",
-    ogImage: "/logo_lohix.png",
-    canonical: "https://lohix.lovable.app/specs",
+      "Full specifications for every LOHIX battery: the LOHIX 48 e-rickshaw pack and the 60.8V / 64V two-wheeler range. Smart BMS, LiFePO4 chemistry, LFP vs lead-acid compared.",
+    ogImage: "/og-image.jpg",
+    canonical: "https://lohixenergy.com/specs",
   },
-  breadcrumb: "Specs",
-  heroEyebrow: "Datasheet · Lohix Energy",
+  heroEyebrow: "Datasheets · The LOHIX range",
   heroTitlePrefix: "The full",
   heroTitleHighlight: "spec",
   heroTitleSuffix: "sheet.",
   heroBody:
-    "Nine engineering decisions, three discipline groups, one battery designed for daily Indian duty cycles. Filter, hover, explore.",
+    "Every LOHIX pack, parameter by parameter — the LOHIX 48 for e-rickshaws and the 60.8V and 64V packs for two-wheelers.",
   explorerHint: "Hover a tile",
   datasheetEyebrow: "Complete datasheet",
-  datasheetHeading: "Every parameter, on one page.",
+  datasheetHeading: "Every model, every parameter.",
+  datasheetBody:
+    "Pick a battery to see its full spec sheet. Charging and discharge ratings are in the downloadable datasheet for dealers and fleet buyers.",
   datasheetDownloadLabel: "Download PDF",
   datasheetDownloadHref: "#download",
+  datasheetViewLabel: "View",
+  twoWheelerCtaLabel: "2W battery specs",
   comparisonEyebrow: "LFP vs Lead-acid",
   comparisonHeading: "Why fleets are switching, one number at a time.",
   comparisonColA: "Lead-acid",
@@ -802,8 +869,131 @@ export const specsDefault: SpecsContent = {
   ],
   ctaEyebrow: "Ready for the field",
   ctaHeading: "See the Lohix Energy in your fleet.",
-  ctaPrimary: { label: "Find a dealer", href: "/dealer" },
+  ctaPrimary: { label: "Where to buy", href: "#buy" },
   ctaSecondary: { label: "Product overview", href: "/product" },
+};
+
+export type Link = { label: string; href: string };
+
+export type RangeContent = {
+  eyebrow: string;
+  heading: string;
+  highlight: string;
+  body: string;
+  linkPrefix: string;
+};
+
+export const rangeDefault: RangeContent = {
+  eyebrow: "The range",
+  heading: "One pack for the e-rickshaw.",
+  highlight: "Four for two wheels.",
+  body: "From full-shift e-rickshaw packs to everyday two-wheeler power — every LOHIX battery is built on LiFePO4 chemistry and a smart BMS.",
+  linkPrefix: "Explore",
+};
+
+export type BuyDialogContent = {
+  eyebrow: string;
+  heading: string;
+  body: string;
+  callLabel: string;
+  emailLabel: string;
+  emailSubject: string;
+  dealerPrompt: string;
+  dealerLink: Link;
+};
+
+export const buyDialogDefault: BuyDialogContent = {
+  eyebrow: "Buy LOHIX",
+  heading: "Talk to our sales team",
+  body: "Call or email us and we'll connect you with the nearest authorized dealer for pricing and availability.",
+  callLabel: "Call sales",
+  emailLabel: "Email",
+  emailSubject: "Buying LOHIX batteries",
+  dealerPrompt: "Want to sell LOHIX?",
+  dealerLink: { label: "Become a dealer", href: "/dealer" },
+};
+
+export type ProductsPageContent = {
+  seo: SeoMeta;
+  heroEyebrow: string;
+  heroTitle: string;
+  heroAccent: string;
+  heroBody: string;
+  estimatorChip: { k: string; v: string };
+  erickshawLabel: string;
+  erickshawHeading: string;
+  compareHeading: string;
+  compareNote: string;
+  estimatorEyebrow: string;
+  estimatorHeading: string;
+  estimatorBody: string;
+  ctaEyebrow: string;
+  ctaHeading: string;
+  ctaHighlight: string;
+  ctaBody: string;
+  ctaPrimary: Link;
+  ctaSecondary: Link;
+  // Section titles shared by /product and every /products/<slug> page.
+  overviewEyebrow: string;
+  featuresEyebrow: string;
+  builtForLabel: string;
+  galleryEyebrow: string;
+  galleryHeading: string;
+  specsEyebrow: string;
+  datasheetHeading: string;
+  datasheetDownloadLabel: string;
+  datasheetRequestLabel: string;
+  productEstimatorHeading: string;
+  productEstimatorBody: string;
+  rangeEyebrow: string;
+  viewAllLabel: string;
+  stickyBuyLabel: string;
+};
+
+export const productsPageDefault: ProductsPageContent = {
+  seo: {
+    title: "Products — LOHIX Smart LiFePO4 Batteries | E-Rickshaw & 2W",
+    description:
+      "The LOHIX range: the LOHIX 48 e-rickshaw battery and 60.8V / 64V LiFePO4 packs for electric two-wheelers. Smart BMS, long cycle life, built in India.",
+    ogImage: "/og-image.jpg",
+    canonical: "https://lohixenergy.com/products",
+  },
+  heroEyebrow: "The LOHIX range",
+  heroTitle: "Pick the pack",
+  heroAccent: "for your vehicle.",
+  heroBody:
+    "Smart LiFePO4 batteries for India's electric mobility — from full-shift e-rickshaw packs to everyday two-wheeler power.",
+  estimatorChip: { k: "Range estimator", v: "Which pack fits?" },
+  erickshawLabel: "E-Rickshaw Batteries",
+  erickshawHeading: "Built for the daily duty of Indian fleets.",
+  compareHeading: "Compare the range",
+  compareNote: "Full datasheets are available for dealers and fleet buyers.",
+  estimatorEyebrow: "Range estimator",
+  estimatorHeading: "Which pack covers your day?",
+  estimatorBody:
+    "Pick a battery, set your daily distance and your vehicle's energy use. We'll show the range per charge and how long the rated cycle life lasts.",
+  ctaEyebrow: "Need help choosing?",
+  ctaHeading: "Not sure which pack fits?",
+  ctaHighlight: "Talk to our team.",
+  ctaBody:
+    "We'll help you choose the right voltage and capacity for your vehicle and daily duty cycle, and point you to the nearest authorized dealer.",
+  ctaPrimary: { label: "Where to buy", href: "#buy" },
+  ctaSecondary: { label: "Register warranty", href: "/#warranty" },
+  overviewEyebrow: "Overview",
+  featuresEyebrow: "Engineering",
+  builtForLabel: "Built for",
+  galleryEyebrow: "Gallery",
+  galleryHeading: "Every angle.",
+  specsEyebrow: "Specifications",
+  datasheetHeading: "Full datasheet",
+  datasheetDownloadLabel: "Download full datasheet",
+  datasheetRequestLabel: "Request the datasheet",
+  productEstimatorHeading: "How far will it take you?",
+  productEstimatorBody:
+    "Set your daily distance and your vehicle's energy use to see the range per charge and how long the rated cycle life lasts at that pace.",
+  rangeEyebrow: "The range",
+  viewAllLabel: "View all products",
+  stickyBuyLabel: "Where to buy",
 };
 
 export const DEFAULTS = {
@@ -816,11 +1006,22 @@ export const DEFAULTS = {
   warranty: warrantyDefault,
   dealer_cta: dealerCtaDefault,
   footer: footerDefault,
+  buy_dialog: buyDialogDefault,
+  range: rangeDefault,
+  products_page: productsPageDefault,
   product: productDefault,
+  products_2w: productsTwoWheelerDefault,
   about: aboutDefault,
   dealer: dealerDefault,
   specs: specsDefault,
 } as const;
+
+// Full-bleed first-screen media for /product. Optional: falls back to the product cut-out.
+export type ShowcaseMedia = {
+  showcaseImage?: string;
+  showcaseImageMobile?: string;
+  showcaseVideo?: string;
+};
 
 export type ContentMap = {
   global: GlobalContent;
@@ -832,7 +1033,11 @@ export type ContentMap = {
   warranty: WarrantyContent;
   dealer_cta: DealerCtaContent;
   footer: FooterContent;
-  product: ProductContent;
+  buy_dialog: BuyDialogContent;
+  range: RangeContent;
+  products_page: ProductsPageContent;
+  product: ProductContent & ShowcaseMedia;
+  products_2w: TwoWheelerContent;
   about: AboutContent;
   dealer: DealerContent;
   specs: SpecsContent;

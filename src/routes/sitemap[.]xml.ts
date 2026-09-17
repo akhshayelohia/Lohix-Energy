@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
+import { fetchSection } from "@/cms/fetchSection";
 
-const BASE_URL = "https://lohix.lovable.app";
+const BASE_URL = "https://lohixenergy.com";
 
 interface Entry {
   path: string;
@@ -13,9 +14,16 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
+        const twoWheeler = await fetchSection("products_2w");
         const entries: Entry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
+          { path: "/products", changefreq: "weekly", priority: "0.9" },
           { path: "/product", changefreq: "weekly", priority: "0.9" },
+          ...twoWheeler.skus.map((s) => ({
+            path: `/products/${s.slug}`,
+            changefreq: "weekly",
+            priority: "0.9",
+          })),
           { path: "/specs", changefreq: "monthly", priority: "0.8" },
           { path: "/about", changefreq: "monthly", priority: "0.7" },
           { path: "/dealer", changefreq: "monthly", priority: "0.8" },

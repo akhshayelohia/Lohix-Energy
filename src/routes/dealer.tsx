@@ -1,14 +1,22 @@
 import { useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ChevronDown, ChevronRight, MapPin, Phone, Sparkles } from "lucide-react";
+import { Phone, Plus } from "lucide-react";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { DealerCTA } from "@/components/DealerCTA";
+import { CityFinder } from "@/components/CityFinder";
+import { Reveal } from "@/components/Reveal";
+import { PageHero } from "@/components/system/PageHero";
+import { PartnerSteps } from "@/components/hero/PartnerSteps";
+import { SectionHeader } from "@/components/system/SectionHeader";
+import { ButtonLink } from "@/components/system/ButtonLink";
+import { FeatureGrid } from "@/components/product/FeatureGrid";
 import { useContent } from "@/cms/useContent";
-import { safeHref } from "@/lib/safe-url";
 import { fetchSection } from "@/cms/fetchSection";
-import { getIcon } from "@/cms/icons";
+import { cn } from "@/lib/utils";
+import { absoluteUrl } from "@/lib/site";
+import { recordCityInterest } from "@/lib/cityInterest";
 
 export const Route = createFileRoute("/dealer")({
   loader: () => fetchSection("dealer"),
@@ -21,21 +29,20 @@ export const Route = createFileRoute("/dealer")({
         {
           name: "description",
           content:
-            seo?.description ||
-            "Partner with LOHIX to distribute smart LFP batteries across Eastern India.",
+            seo?.description || "Partner with LOHIX to sell smart LFP batteries in your city.",
         },
         { property: "og:title", content: seo?.title || "Become a LOHIX Dealer" },
         {
           property: "og:description",
           content:
             seo?.description ||
-            "Join the LOHIX distributor network. Training, margin, on-ground service — built in.",
+            "Partner with LOHIX. Training, margin, on-ground service — built in.",
         },
         { property: "og:type", content: "website" },
-        { property: "og:url", content: seo?.canonical || "https://lohix.lovable.app/dealer" },
-        ...(seo?.ogImage ? [{ property: "og:image", content: seo.ogImage }] : []),
+        { property: "og:url", content: seo?.canonical || "https://lohixenergy.com/dealer" },
+        ...(seo?.ogImage ? [{ property: "og:image", content: absoluteUrl(seo.ogImage) }] : []),
       ],
-      links: [{ rel: "canonical", href: seo?.canonical || "https://lohix.lovable.app/dealer" }],
+      links: [{ rel: "canonical", href: seo?.canonical || "https://lohixenergy.com/dealer" }],
     };
   },
 });
@@ -44,185 +51,135 @@ function DealerPage() {
   const g = useContent("global");
   const c = useContent("dealer");
   const [open, setOpen] = useState<number | null>(0);
+  const [applyCity, setApplyCity] = useState<string>();
+
+  const requestCity = (city: string) => {
+    recordCityInterest(city);
+    setApplyCity(city);
+    document.getElementById("apply")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
-    <main className="bg-paper text-ink min-h-screen antialiased">
+    <main className="min-h-screen bg-paper text-ink antialiased">
       <Nav />
 
-      {/* HERO */}
-      <section className="relative w-full overflow-hidden">
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 pt-24 sm:pt-28 md:pt-32">
-          <nav className="flex items-center gap-1.5 text-[11px] text-muted-ink">
-            <Link to="/" className="hover:text-ink transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="w-3 h-3 opacity-50" />
-            <span className="text-ink">{c.breadcrumb}</span>
-          </nav>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 pt-8 sm:pt-10 md:pt-14 pb-12 md:pb-16">
-          <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-muted-ink">
-            <span className="w-1.5 h-1.5 rounded-full bg-lohix-lime" />
-            {c.heroEyebrow}
-          </div>
-          <div className="mt-4 grid md:grid-cols-12 gap-6 md:gap-10 md:items-end">
-            <h1 className="md:col-span-8 font-sans font-bold uppercase tracking-[-0.035em] leading-[0.92] text-[clamp(40px,9.5vw,112px)]">
-              {c.heroTitlePrefix} <span className="text-lohix-lime">{c.heroTitleHighlight}</span>.
-            </h1>
-            <p className="md:col-span-4 text-[13px] text-muted-ink leading-relaxed">{c.heroBody}</p>
-          </div>
-
-          <div className="mt-8 flex flex-col sm:flex-row gap-3">
-            <a
-              href={safeHref(c.ctaPrimary.href)}
-              className="pill inline-flex items-center justify-center gap-2 bg-ink text-paper-2 text-[13px] font-medium px-5 py-3 hover:bg-lohix-lime hover:text-ink transition-colors"
-            >
+      <PageHero
+        scrollCue
+        visual={<PartnerSteps label={c.stepsEyebrow} steps={c.steps} />}
+        eyebrow={c.heroEyebrow}
+        title={c.heroTitlePrefix}
+        accent={c.heroTitleHighlight}
+        accentOnNewLine
+        body={c.heroBody}
+        actions={
+          <>
+            <ButtonLink href={c.ctaPrimary.href} variant="lime">
               {c.ctaPrimary.label}
-              <ArrowRight className="w-3.5 h-3.5" />
-            </a>
-            {c.showPhoneCta && (
-              <a
-                href={`tel:${(g.contactPhone || "").replace(/\s+/g, "")}`}
-                className="pill inline-flex items-center justify-center gap-2 border border-line bg-paper-2 text-ink text-[13px] font-medium px-5 py-3 hover:border-ink transition-colors"
-              >
-                <Phone className="w-3.5 h-3.5" />
-                {g.contactPhone}
-              </a>
-            )}
-          </div>
-        </div>
-      </section>
+            </ButtonLink>
+            {String(c.showPhoneCta) !== "false" &&
+              /[1-9]/.test(g.contactPhone.replace(/^\s*\+?91/, "")) && (
+                <a
+                  href={`tel:${g.contactPhone.replace(/\s+/g, "")}`}
+                  className="btn btn-ghost-dark tnum"
+                >
+                  <Phone className="h-3.5 w-3.5" />
+                  {g.contactPhone}
+                </a>
+              )}
+          </>
+        }
+      />
 
       {/* BENEFITS */}
-      <section className="w-full bg-paper-2 border-y border-line px-5 sm:px-6 py-16 sm:py-20 md:py-24">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-10">
-            <div>
-              <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-muted-ink">
-                <span className="w-6 h-px bg-ink/30" /> {c.benefitsEyebrow}
-              </div>
-              <h2 className="mt-5 text-[24px] sm:text-[28px] md:text-[34px] font-semibold tracking-[-0.02em] leading-[1.15] max-w-xl">
-                {c.benefitsHeading}
-              </h2>
-            </div>
-            <p className="text-[13px] text-muted-ink md:max-w-xs leading-relaxed">
-              {c.benefitsSubtext}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-line rounded-[18px] overflow-hidden border border-line">
-            {c.benefits.map((b, i) => {
-              const Icon = getIcon(b.icon);
-              return (
-                <motion.div
-                  key={`${b.title}-${i}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.4, delay: i * 0.05 }}
-                  className="group bg-paper-2 p-6 sm:p-7 hover:bg-ink hover:text-paper-2 transition-colors duration-300"
-                >
-                  <Icon className="w-4 h-4 text-ink group-hover:text-lohix-lime transition-colors" />
-                  <h3 className="mt-8 text-[15px] font-semibold tracking-[-0.01em] group-hover:text-paper-2">
-                    {b.title}
-                  </h3>
-                  <p className="mt-2 text-[13px] text-muted-ink leading-[1.7] group-hover:text-paper-2/60">
-                    {b.body}
-                  </p>
-                </motion.div>
-              );
-            })}
+      <section className="section bg-paper">
+        <div className="container-x">
+          <SectionHeader
+            eyebrow={c.benefitsEyebrow}
+            title={c.benefitsHeading}
+            aside={c.benefitsSubtext}
+          />
+          <div className="mt-12 md:mt-16">
+            <FeatureGrid items={c.benefits} columns={c.benefits.length >= 4 ? 4 : 3} />
           </div>
         </div>
       </section>
 
-      {/* STEPS */}
-      <section className="w-full bg-paper px-5 sm:px-6 py-16 sm:py-20 md:py-28">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-muted-ink">
-            <span className="w-6 h-px bg-ink/30" /> {c.stepsEyebrow}
-          </div>
-          <h2 className="mt-5 text-[24px] sm:text-[28px] md:text-[34px] font-semibold tracking-[-0.02em] leading-[1.15] max-w-2xl">
-            {c.stepsHeading}
-          </h2>
-
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-px bg-line border border-line rounded-[18px] overflow-hidden">
+      {/* STEPS — shown in the hero on large screens */}
+      <section className="section border-y border-line bg-paper-2 lg:hidden">
+        <div className="container-x">
+          <SectionHeader eyebrow={c.stepsEyebrow} title={c.stepsHeading} />
+          <div className="mosaic mt-12 grid-cols-1 sm:grid-cols-2 md:mt-16 lg:grid-cols-4">
             {c.steps.map((s, i) => (
-              <motion.div
+              <Reveal
                 key={`${s.n}-${i}`}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.4, delay: i * 0.06 }}
-                className="bg-paper-2 p-6 sm:p-7 relative"
+                delay={i * 0.06}
+                className="relative bg-paper-2 p-7 sm:p-8"
               >
-                <div className="font-sans text-[36px] sm:text-[44px] font-bold tracking-[-0.03em] leading-none text-lohix-lime">
+                <div className="tnum text-[44px] font-semibold leading-none tracking-[-0.04em] text-lohix-lime-deep">
                   {s.n}
                 </div>
-                <h3 className="mt-5 text-[15px] font-semibold tracking-[-0.01em]">{s.t}</h3>
-                <p className="mt-1.5 text-[13px] text-muted-ink leading-[1.7]">{s.b}</p>
-              </motion.div>
+                <h3 className="t-h3 mt-10 text-ink">{s.t}</h3>
+                <p className="t-small mt-2.5 text-muted-ink">{s.b}</p>
+                {i < c.steps.length - 1 && (
+                  <span className="absolute right-7 top-9 hidden h-px w-10 bg-gradient-to-r from-ink/20 to-transparent lg:block" />
+                )}
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CITY MARQUEE */}
-      <section className="w-full bg-paper-2 border-y border-line py-10 sm:py-14 overflow-hidden">
-        <div className="max-w-6xl mx-auto px-5 sm:px-6 mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-muted-ink">
-            <MapPin className="w-3 h-3 text-lohix-lime" /> {c.citiesLabel}
+      {/* YOUR CITY */}
+      <section className="section bg-paper lg:border-t lg:border-line">
+        <div className="container-x grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-16">
+          <div className="lg:col-span-5">
+            <SectionHeader
+              layout="stack"
+              eyebrow={c.cityEyebrow}
+              title={c.cityHeading}
+              aside={c.cityBody}
+            />
           </div>
-          <div className="hidden sm:flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-muted-ink">
-            <Sparkles className="w-3 h-3" /> {c.cities.length}+ cities
-          </div>
-        </div>
-        <div className="relative">
-          <div className="flex gap-3 animate-marquee whitespace-nowrap w-max">
-            {[...c.cities, ...c.cities].map((city, i) => (
-              <span
-                key={`${city}-${i}`}
-                className="pill border border-line bg-paper px-4 py-2 text-[12px] text-ink/80 inline-flex items-center gap-2"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-lohix-lime" />
-                {city}
-              </span>
-            ))}
-          </div>
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-paper-2 to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-paper-2 to-transparent" />
+          <Reveal delay={0.08} className="lg:col-span-7">
+            <CityFinder
+              onRequest={requestCity}
+              copy={{
+                question: c.cityQuestion,
+                hint: c.cityHint,
+                placeholder: c.cityPlaceholder,
+                button: c.cityButton,
+              }}
+            />
+          </Reveal>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="w-full bg-paper px-5 sm:px-6 py-16 sm:py-20 md:py-24">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-muted-ink">
-            <span className="w-6 h-px bg-ink/30" /> {c.faqEyebrow}
-          </div>
-          <h2 className="mt-5 text-[24px] sm:text-[28px] md:text-[34px] font-semibold tracking-[-0.02em] leading-[1.15]">
-            {c.faqHeading}
-          </h2>
-
-          <div className="mt-10 rounded-[18px] border border-line overflow-hidden bg-paper-2 divide-y divide-line">
+      <section className="section border-y border-line bg-paper-2">
+        <div className="container-narrow">
+          <SectionHeader layout="stack" eyebrow={c.faqEyebrow} title={c.faqHeading} />
+          <Reveal className="card mt-12 divide-y divide-line overflow-hidden bg-paper md:mt-16">
             {c.faqs.map((f, i) => {
               const isOpen = open === i;
               return (
                 <div key={`${f.q}-${i}`}>
                   <button
+                    type="button"
+                    aria-expanded={isOpen}
                     onClick={() => setOpen(isOpen ? null : i)}
-                    className="w-full flex items-center justify-between gap-4 text-left px-5 sm:px-7 py-5 hover:bg-paper transition-colors"
+                    className="flex w-full items-center justify-between gap-6 px-6 py-5 text-left transition-colors hover:bg-paper-2 sm:px-8 sm:py-6"
                   >
-                    <span className="text-[14px] sm:text-[15px] font-medium tracking-[-0.005em]">
+                    <span className="text-[15px] font-medium tracking-[-0.01em] text-ink">
                       {f.q}
                     </span>
-                    <ChevronDown
-                      className={[
-                        "w-4 h-4 text-muted-ink shrink-0 transition-transform duration-300",
-                        isOpen ? "rotate-180 text-ink" : "",
-                      ].join(" ")}
-                    />
+                    <span
+                      className={cn(
+                        "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-line transition-all duration-300",
+                        isOpen ? "rotate-45 border-transparent bg-ink text-lohix-lime" : "text-ink",
+                      )}
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                    </span>
                   </button>
                   <AnimatePresence initial={false}>
                     {isOpen && (
@@ -231,25 +188,22 @@ function DealerPage() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                         className="overflow-hidden"
                       >
-                        <p className="px-5 sm:px-7 pb-5 text-[13px] sm:text-[14px] text-muted-ink leading-[1.75] max-w-2xl">
-                          {f.a}
-                        </p>
+                        <p className="t-body max-w-2xl px-6 pb-6 text-muted-ink sm:px-8">{f.a}</p>
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
               );
             })}
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* APPLY */}
       <div id="apply">
-        <DealerCTA />
+        <DealerCTA prefillCity={applyCity} />
       </div>
 
       <Footer />

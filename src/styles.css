@@ -3,6 +3,8 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+/* Phones held sideways: very little height to work with. */
+@custom-variant short (@media (max-height: 520px) and (orientation: landscape));
 
 @theme inline {
   --color-background: var(--background);
@@ -29,24 +31,38 @@
   --color-paper-2: var(--paper-2);
   --color-line: var(--line);
   --color-muted-ink: var(--muted-ink);
+  --color-night: var(--night);
+  --color-night-2: var(--night-2);
   --color-lohix-green: var(--lohix-green);
   --color-lohix-lime: var(--lohix-lime);
+  --color-lohix-lime-deep: var(--lohix-lime-deep);
   --font-display: "Inter", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
 }
 
+/*
+  LOHIX design tokens.
+  Rule of thumb: lime is a signal colour. Use it for text only on dark
+  surfaces (night / ink); on light surfaces use lime-deep or keep lime to
+  dots, icons and fills.
+*/
 :root {
   --radius: 999px;
 
-  /* Light SaaS palette */
-  --paper: #f7f6f2; /* off-white background */
-  --paper-2: #ffffff; /* cards */
-  --ink: #0b0f10; /* primary text */
-  --muted-ink: #6b737c; /* secondary text */
-  --line: #e7e5de; /* hairlines */
+  --paper: #f7f6f2;
+  --paper-2: #ffffff;
+  --ink: #0b0f10;
+  --muted-ink: #5d646c;
+  --line: #e7e5de;
 
-  --lohix-green: #b7e26d; /* unified — single green across the site */
+  --night: #05070a;
+  --night-2: #0b0f10;
+
   --lohix-lime: #b7e26d;
+  --lohix-green: var(--lohix-lime);
+  --lohix-lime-deep: color-mix(in oklab, var(--lohix-lime) 52%, #10160a);
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
 
   --background: var(--paper);
   --foreground: var(--ink);
@@ -66,12 +82,22 @@
   --destructive-foreground: #ffffff;
   --border: var(--line);
   --input: var(--line);
-  --ring: var(--lohix-green);
+  --ring: var(--lohix-lime);
 }
 
 @layer base {
   * {
     border-color: var(--color-border);
+  }
+
+  html {
+    scroll-padding-top: 96px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 
   html,
@@ -84,11 +110,140 @@
     line-height: 1.5;
     letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   ::selection {
     background: var(--lohix-lime);
     color: var(--ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--lohix-lime);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Layout */
+  .container-x {
+    @apply mx-auto w-full max-w-[1200px] px-5 sm:px-8;
+  }
+  .container-narrow {
+    @apply mx-auto w-full max-w-[880px] px-5 sm:px-8;
+  }
+  .section {
+    @apply py-20 sm:py-24 md:py-32;
+  }
+  .section-sm {
+    @apply py-14 sm:py-16 md:py-20;
+  }
+
+  /* Type scale */
+  .t-display {
+    @apply font-sans font-bold uppercase tracking-[-0.045em] leading-[0.88];
+  }
+  .t-h1 {
+    @apply font-sans font-bold uppercase tracking-[-0.04em] leading-[0.92] text-[clamp(44px,8vw,104px)];
+  }
+  .t-h2 {
+    @apply font-sans font-semibold tracking-[-0.03em] leading-[1.06] text-[30px] sm:text-[38px] md:text-[46px];
+  }
+  .t-h3 {
+    @apply font-sans text-[16px] font-semibold tracking-[-0.012em] leading-[1.3];
+  }
+  .t-lead {
+    @apply text-[15px] md:text-[17px] leading-[1.65];
+  }
+  .t-body {
+    @apply text-[14px] md:text-[15px] leading-[1.75];
+  }
+  .t-small {
+    @apply text-[13px] leading-[1.65];
+  }
+  .t-label {
+    @apply text-[10.5px] font-medium uppercase tracking-[0.2em];
+  }
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[13px] font-medium whitespace-nowrap transition-[background-color,color,border-color,box-shadow,transform] duration-300 active:scale-[0.98];
+  }
+  .btn-sm {
+    @apply px-3.5 py-2 text-[12px];
+  }
+  .btn-ink {
+    @apply bg-ink text-paper-2 hover:bg-lohix-lime hover:text-ink;
+  }
+  .btn-lime {
+    @apply bg-lohix-lime text-ink font-semibold hover:bg-white shadow-[0_12px_40px_-14px_color-mix(in_oklab,var(--lohix-lime)_70%,transparent)];
+  }
+  .btn-outline {
+    @apply border border-line bg-paper-2 text-ink hover:border-ink;
+  }
+  .btn-ghost-dark {
+    @apply border border-white/15 bg-white/[0.04] text-white/90 backdrop-blur hover:bg-white/[0.1] hover:border-white/25;
+  }
+
+  /* Surfaces */
+  .card {
+    @apply rounded-[12px] border border-line bg-paper-2;
+  }
+  .panel-dark {
+    @apply relative overflow-hidden rounded-[16px] bg-night-2 text-white;
+  }
+  .mosaic {
+    @apply grid gap-px overflow-hidden rounded-[12px] border border-line bg-line;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-paper-2 px-3 py-1.5 text-[11.5px] text-ink/80;
+  }
+  /* Grow small pill controls to a comfortable 40px on touch screens. */
+  @media (pointer: coarse) {
+    .tap {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  /* Short lime tick, used to mark figures on light surfaces. */
+  .accent-tick {
+    @apply block h-[3px] w-6 rounded-full bg-lohix-lime;
+  }
+  .link-accent {
+    @apply underline decoration-transparent decoration-2 underline-offset-4 transition-[color,text-decoration-color] duration-300 hover:decoration-lohix-lime;
+  }
+  .chip-dark {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.05] px-3 py-1.5 text-[11.5px] text-white/80 backdrop-blur;
+  }
+
+  /* Dark stage effects */
+  .stage-grid {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 75%);
+  }
+  .fade-edges {
+    mask-image: radial-gradient(ellipse 62% 64% at 50% 50%, black 58%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 62% 64% at 50% 50%, black 58%, transparent 100%);
+  }
+  /* Soft rectangular vignette: fades all four edges of a photo into what's behind it. */
+  .fade-frame {
+    mask-image:
+      linear-gradient(to bottom, transparent, black 16%, black 84%, transparent),
+      linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    mask-composite: intersect;
+    -webkit-mask-image:
+      linear-gradient(to bottom, transparent, black 16%, black 84%, transparent),
+      linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-composite: source-in;
   }
 }
 
@@ -135,15 +290,6 @@
     animation: marquee 40s linear infinite;
   }
 
-  @keyframes shimmer {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%);
-    }
-  }
-
   @keyframes pulseDot {
     0%,
     100% {
@@ -157,6 +303,235 @@
   }
   .pulse-dot {
     animation: pulseDot 1.8s ease-in-out infinite;
+  }
+
+  @keyframes floatY {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  .animate-float {
+    animation: floatY 7s ease-in-out infinite;
+  }
+
+  @keyframes ringPulse {
+    0%,
+    100% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 0.9;
+    }
+  }
+  .animate-ring {
+    animation: ringPulse 5s ease-in-out infinite;
+  }
+
+  /* Entrance motion for above-the-fold content. Plain CSS so it plays from the
+     server-rendered HTML instead of waiting for hydration. */
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .animate-rise {
+    animation: rise 0.8s var(--ease-out-expo) both;
+    animation-delay: var(--delay, 0ms);
+  }
+
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+      filter: blur(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+  }
+  .animate-reveal {
+    animation: reveal 1.2s var(--ease-out-expo) both;
+    animation-delay: var(--delay, 0ms);
+  }
+
+  @keyframes navIn {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .animate-nav-in {
+    animation: navIn 0.5s var(--ease-out-expo) both;
+  }
+
+  @keyframes showcaseIn {
+    from {
+      opacity: 0;
+      transform: scale(1.08);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .animate-showcase {
+    animation: showcaseIn 1.6s var(--ease-out-expo) both;
+  }
+  /* Opacity-only entrance for product photography (no zoom). */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .animate-fade {
+    animation: fadeIn 0.9s ease-out both;
+  }
+
+  @keyframes scrollCue {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(200%);
+    }
+  }
+  .animate-scroll-cue {
+    animation: scrollCue 1.8s ease-in-out infinite;
+  }
+
+  /* Dashed road centre line that appears to travel forward. */
+  @keyframes roadDash {
+    to {
+      stroke-dashoffset: -28;
+    }
+  }
+  .animate-road {
+    stroke-dasharray: 10 18;
+    animation: roadDash 1.4s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-marquee,
+    .pulse-dot,
+    .animate-float,
+    .animate-ring,
+    .animate-rise,
+    .animate-reveal,
+    .animate-nav-in,
+    .animate-showcase,
+    .animate-fade,
+    .animate-scroll-cue,
+    .animate-road {
+      animation: none;
+    }
+  }
+
+  /* Cursor-following highlight. Pair with trackSpotlight() from src/lib/spotlight. */
+  .spotlight {
+    position: relative;
+    isolation: isolate;
+  }
+  .spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-out-expo);
+    background: radial-gradient(
+      380px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+      color-mix(in oklab, var(--lohix-lime) 26%, transparent),
+      transparent 65%
+    );
+  }
+  @media (hover: hover) {
+    .spotlight:hover::before {
+      opacity: 1;
+    }
+  }
+
+  /* Slider used by the range estimator; --fill is the filled share of the track. */
+  /* The input is a 32px-tall touch target; the visible track is drawn 6px tall inside it. */
+  .range-input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 32px;
+    cursor: pointer;
+    background: transparent;
+    touch-action: pan-y;
+  }
+  .range-input::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(
+      to right,
+      var(--lohix-lime) var(--fill, 50%),
+      rgba(255, 255, 255, 0.12) var(--fill, 50%)
+    );
+  }
+  .range-input::-moz-range-track {
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .range-input::-moz-range-progress {
+    height: 6px;
+    border-radius: 999px;
+    background: var(--lohix-lime);
+  }
+  .range-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -8px;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 0 0 5px color-mix(in oklab, var(--lohix-lime) 30%, transparent);
+    transition: box-shadow 0.2s;
+  }
+  .range-input::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border: 0;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 0 0 5px color-mix(in oklab, var(--lohix-lime) 30%, transparent);
+  }
+  .range-input:hover::-webkit-slider-thumb,
+  .range-input:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 8px color-mix(in oklab, var(--lohix-lime) 38%, transparent);
+  }
+  .range-input:focus-visible {
+    outline-offset: 6px;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
   .glass {

@@ -1,36 +1,35 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
-import { Preloader } from "@/components/Preloader";
 import { FeatureSection } from "@/components/FeatureSection";
 import { WhyLohix } from "@/components/WhyLohix";
-import { PixelDivider } from "@/components/PixelDivider";
 import { DealerCTA } from "@/components/DealerCTA";
 import { WarrantyForm } from "@/components/WarrantyForm";
 import { Footer } from "@/components/Footer";
 import { StatsStrip } from "@/components/StatsStrip";
 import { TrustMarquee } from "@/components/TrustMarquee";
+import { RangeShowcase } from "@/components/RangeShowcase";
 
 export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Lohix Energy — Smart LFP Battery | Power. Performance. Possibilities." },
+      { title: "LOHIX Energy — Smart LFP Batteries | Power. Performance. Possibilities." },
       {
         name: "description",
         content:
-          "Lohix Energy — 51.2V 100Ah Smart LFP battery built for e-rickshaws and EVs. 3500+ cycles, smart BMS, made in India.",
+          "Smart LiFePO4 batteries built in India — the LOHIX 48 for e-rickshaws and a 60.8V / 64V range for electric two-wheelers. Smart BMS, long cycle life, local service.",
       },
-      { property: "og:title", content: "Lohix Energy — Smart LFP Battery" },
+      { property: "og:title", content: "LOHIX Energy — Smart LFP Batteries" },
       {
         property: "og:description",
-        content: "Power. Performance. Possibilities. Built for the roads of Eastern India.",
+        content: "Power. Performance. Possibilities. Built for the roads of India.",
       },
       { property: "og:image", content: "/logo_lohix.png" },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://lohix.lovable.app/" },
+      { property: "og:url", content: "https://lohixenergy.com/" },
     ],
-    links: [{ rel: "canonical", href: "https://lohix.lovable.app/" }],
+    links: [{ rel: "canonical", href: "https://lohixenergy.com/" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -41,7 +40,7 @@ export const Route = createFileRoute("/")({
           brand: { "@type": "Brand", name: "LOHIX" },
           description:
             "51.2V 100Ah Smart Lithium Iron Phosphate (LFP) battery for e-rickshaws and electric vehicles. 3500+ cycles, smart BMS, made in India.",
-          image: "https://lohix.lovable.app/logo_lohix.png",
+          image: "https://lohixenergy.com/logo_lohix.png",
           category: "EV Battery",
           countryOfOrigin: "IN",
         }),
@@ -52,15 +51,14 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <main className="bg-paper text-ink min-h-screen">
-      <Preloader />
+    <main className="min-h-screen bg-paper text-ink">
       <Nav />
       <Hero />
       <TrustMarquee />
       <FeatureSection />
       <StatsStrip />
+      <RangeShowcase />
       <WhyLohix />
-      <PixelDivider />
       <WarrantyForm />
       <DealerCTA />
       <Footer />

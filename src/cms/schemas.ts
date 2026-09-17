@@ -27,6 +27,7 @@ export type Field = {
   fields?: Field[]; // for group / list-of-group
   itemType?: "text" | "group"; // for list
   itemLabel?: string; // for list (singular)
+  collapsed?: boolean; // list: items start folded
 };
 
 const ctaGroup = (key: string, label: string): Field => ({
@@ -38,6 +39,30 @@ const ctaGroup = (key: string, label: string): Field => ({
     { key: "href", label: "Link", type: "url" },
   ],
 });
+
+const showcaseImageField: Field = {
+  key: "showcaseImage",
+  label: "Showcase image (full-bleed first screen)",
+  type: "image",
+  dimensions: "1920 × 1080 px",
+  help: "Landscape photo, 16:9, JPG/WebP ≤600 KB (export PNG photos as JPG/WebP). On desktop it fills the whole first screen edge to edge; wide screens trim a little from the top and bottom, so keep about 15% free space above and below the product. Phones show the whole photo. Blank shows the illustrated stage.",
+};
+
+const showcaseImageMobileField: Field = {
+  key: "showcaseImageMobile",
+  label: "Showcase image · phones (optional)",
+  type: "image",
+  dimensions: "1080 × 1350 px",
+  help: "Portrait 4:5 or 9:16 version of the same shot, JPG/WebP ≤400 KB. Strongly recommended: without it, phones show the landscape photo small in the middle of the screen.",
+};
+
+const showcaseVideoField: Field = {
+  key: "showcaseVideo",
+  label: "Showcase video (optional)",
+  type: "video",
+  dimensions: "1920 × 1080 px",
+  help: "16:9 MP4 (H.264), muted loop, ≤15 MB. Plays instead of the image, which becomes its poster frame.",
+};
 
 const seoGroup: Field = {
   key: "seo",
@@ -69,7 +94,7 @@ const seoGroup: Field = {
       key: "canonical",
       label: "Canonical URL",
       type: "url",
-      help: "Absolute URL of this page (e.g. https://lohix.lovable.app/about).",
+      help: "Absolute URL of this page (e.g. https://lohixenergy.com/about).",
     },
   ],
 };
@@ -100,7 +125,14 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
       label: "Background video",
       type: "video",
       dimensions: "1920 × 1080 px",
-      help: "16:9, MP4 H.264, muted loop, ≤15 MB. Leave blank to keep the bundled default.",
+      help: "16:9 MP4 (H.264), muted loop, 8–12 s. Keep it under 6 MB — every visitor downloads it. Leave blank to use the built-in, web-compressed footage (3.7 MB desktop, 1.7 MB phone portrait cut).",
+    },
+    {
+      key: "videoUrlMobile",
+      label: "Background video · phones (recommended)",
+      type: "video",
+      dimensions: "720 × 1280 px",
+      help: "Portrait 9:16 (or 720p 16:9) MP4, ≤2.5 MB. Played on screens under 768px wide so phones on mobile data don't download the full-size file. Blank uses the video above — or, if that is blank too, the built-in phone cut.",
     },
     { key: "chipBadge", label: "Chip badge (small green pill)", type: "text" },
     { key: "chipText", label: "Chip text", type: "text" },
@@ -175,7 +207,7 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
       key: "headingHighlight",
       label: "Heading · highlighted",
       type: "text",
-      help: "Rendered in the accent colour, italic.",
+      help: "Rendered in the accent colour.",
     },
     {
       key: "items",
@@ -217,7 +249,7 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
   ],
 
   warranty: [
-    { key: "eyebrow", label: "Eyebrow (pill above the heading)", type: "text" },
+    { key: "eyebrow", label: "Eyebrow (small caps line above the heading)", type: "text" },
     { key: "headingPrefix", label: "Heading · prefix", type: "text" },
     {
       key: "headingHighlight",
@@ -255,37 +287,171 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
 
   footer: [
     { key: "tagline", label: "Tagline", type: "textarea", rows: 2 },
-    { key: "slogan", label: "Slogan", type: "text" },
-    { key: "copyright", label: "Copyright", type: "text" },
+    ctaGroup("dealerButton", "Button under the tagline"),
+    {
+      key: "exploreHeading",
+      label: "Explore column · heading",
+      type: "text",
+      help: "Product columns are built automatically from the product catalogue.",
+    },
     {
       key: "productLinks",
-      label: "Product links",
+      label: "Explore column · links",
       type: "list",
       itemType: "group",
       itemLabel: "Link",
+      help: "Shown after 'All products'. Links to individual product pages are skipped — they already have their own column.",
       fields: [
         { key: "label", label: "Label", type: "text" },
         { key: "href", label: "Link", type: "url" },
       ],
     },
+    { key: "contactHeading", label: "Contact column · heading", type: "text" },
     {
       key: "contactLines",
       label: "Contact lines",
       type: "list",
       itemType: "text",
       itemLabel: "Line",
+      help: "Phone numbers and emails become tap-to-call / tap-to-email links. Phone numbers also appear in the Where to buy pop-up.",
+    },
+    { key: "copyright", label: "Copyright", type: "text" },
+    { key: "slogan", label: "Slogan", type: "text" },
+  ],
+
+  buy_dialog: [
+    { key: "eyebrow", label: "Eyebrow", type: "text" },
+    { key: "heading", label: "Heading", type: "text" },
+    { key: "body", label: "Intro copy", type: "textarea", rows: 2 },
+    { key: "callLabel", label: "Phone row label", type: "text" },
+    { key: "emailLabel", label: "Email row label", type: "text" },
+    {
+      key: "emailSubject",
+      label: "Email subject line",
+      type: "text",
+      help: "Pre-filled when a visitor taps the email row. The address comes from Global settings.",
+    },
+    { key: "dealerPrompt", label: "Footer prompt", type: "text" },
+    ctaGroup("dealerLink", "Footer link"),
+  ],
+
+  range: [
+    { key: "eyebrow", label: "Eyebrow", type: "text" },
+    { key: "heading", label: "Heading", type: "text" },
+    {
+      key: "highlight",
+      label: "Heading · second line",
+      type: "text",
+      help: "Rendered in the accent colour.",
+    },
+    { key: "body", label: "Body copy", type: "textarea", rows: 3 },
+    {
+      key: "linkPrefix",
+      label: "Card link prefix",
+      type: "text",
+      help: "Followed by the category name, e.g. 'Explore 2W Batteries'. Cards, names and figures come from the product sections.",
+    },
+  ],
+
+  products_page: [
+    seoGroup,
+    { key: "heroEyebrow", label: "Hero · eyebrow", type: "text" },
+    { key: "heroTitle", label: "Hero title", type: "text" },
+    {
+      key: "heroAccent",
+      label: "Hero title · second line",
+      type: "text",
+      help: "Rendered in the accent colour.",
+    },
+    { key: "heroBody", label: "Hero · body copy", type: "textarea", rows: 3 },
+    {
+      key: "estimatorChip",
+      label: "Hero · estimator chip",
+      type: "group",
+      help: "The third chip on the hero image; it jumps to the range estimator.",
+      fields: [
+        { key: "k", label: "Title", type: "text" },
+        { key: "v", label: "Sub-label", type: "text" },
+      ],
+    },
+
+    { key: "erickshawLabel", label: "E-rickshaw category · name", type: "text" },
+    { key: "erickshawHeading", label: "E-rickshaw category · heading", type: "text" },
+    {
+      key: "compareHeading",
+      label: "2W comparison · heading",
+      type: "text",
+      help: "The 2W category name and cards are edited under '2W batteries'.",
+    },
+    { key: "compareNote", label: "2W comparison · note", type: "text" },
+
+    { key: "estimatorEyebrow", label: "Estimator · eyebrow", type: "text" },
+    { key: "estimatorHeading", label: "Estimator · heading", type: "text" },
+    { key: "estimatorBody", label: "Estimator · intro", type: "textarea", rows: 3 },
+
+    { key: "ctaEyebrow", label: "Bottom CTA · eyebrow", type: "text" },
+    { key: "ctaHeading", label: "Bottom CTA · heading", type: "text" },
+    { key: "ctaHighlight", label: "Bottom CTA · highlight", type: "text" },
+    { key: "ctaBody", label: "Bottom CTA · body", type: "textarea", rows: 3 },
+    ctaGroup("ctaPrimary", "Bottom CTA · primary"),
+    ctaGroup("ctaSecondary", "Bottom CTA · secondary"),
+
+    {
+      key: "overviewEyebrow",
+      label: "Product pages · overview eyebrow",
+      type: "text",
+      help: "This and the fields below apply to /product and every 2W model page.",
+    },
+    { key: "featuresEyebrow", label: "Product pages · features eyebrow", type: "text" },
+    { key: "builtForLabel", label: "Product pages · use-case label", type: "text" },
+    { key: "galleryEyebrow", label: "Product pages · gallery eyebrow", type: "text" },
+    { key: "galleryHeading", label: "Product pages · gallery heading", type: "text" },
+    { key: "specsEyebrow", label: "Product pages · specs eyebrow", type: "text" },
+    { key: "datasheetHeading", label: "Product pages · datasheet card title", type: "text" },
+    {
+      key: "datasheetDownloadLabel",
+      label: "Product pages · download button",
+      type: "text",
+      help: "Shown when the model has a datasheet PDF link.",
+    },
+    {
+      key: "datasheetRequestLabel",
+      label: "Product pages · request button",
+      type: "text",
+      help: "Shown when there is no PDF yet — opens an email to the global contact address.",
+    },
+    {
+      key: "productEstimatorHeading",
+      label: "Product pages · estimator heading",
+      type: "text",
+    },
+    {
+      key: "productEstimatorBody",
+      label: "Product pages · estimator intro",
+      type: "textarea",
+      rows: 2,
+    },
+    { key: "rangeEyebrow", label: "Product pages · related range eyebrow", type: "text" },
+    { key: "viewAllLabel", label: "Product pages · 'view all' button", type: "text" },
+    {
+      key: "stickyBuyLabel",
+      label: "Product pages · phone buy bar button",
+      type: "text",
+      help: "The bar that slides up on phones once the product intro scrolls away. It always opens the Where to buy pop-up.",
     },
   ],
 
   product: [
+    showcaseImageField,
+    showcaseImageMobileField,
+    showcaseVideoField,
     {
       key: "heroImage",
-      label: "Hero product image",
+      label: "Product cut-out (cards & menus)",
       type: "image",
       dimensions: "1600 × 1200 px",
-      help: "4:3 landscape, transparent PNG, ≤2 MB. Fills the hero placeholder edge-to-edge.",
+      help: "4:3, transparent PNG, ≤2 MB. Used on product cards and menus, and on the showcase stage when no showcase image is set.",
     },
-    { key: "breadcrumb", label: "Breadcrumb label", type: "text" },
     { key: "eyebrow", label: "Eyebrow", type: "text" },
     { key: "titleMain", label: "Title · main", type: "text" },
     { key: "titleAccent", label: "Title · accent", type: "text" },
@@ -363,11 +529,149 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
     { key: "ctaHeading", label: "Bottom CTA · heading", type: "text" },
     { key: "ctaHighlight", label: "Bottom CTA · highlight", type: "text" },
     { key: "ctaBody", label: "Bottom CTA · body", type: "textarea", rows: 3 },
+    {
+      key: "datasheetUrl",
+      label: "Full datasheet PDF link (optional)",
+      type: "url",
+      help: "Shows a 'Download full datasheet' button when set.",
+    },
+  ],
+
+  products_2w: [
+    { key: "categoryLabel", label: "Category name", type: "text" },
+    { key: "categoryEyebrow", label: "Category eyebrow", type: "text" },
+    { key: "categoryHeading", label: "Category heading (products page)", type: "text" },
+    { key: "categoryBody", label: "Category intro", type: "textarea", rows: 3 },
+    { key: "useCases", label: "Use cases", type: "list", itemType: "text", itemLabel: "Use case" },
+    { key: "featuresHeading", label: "Features heading", type: "text" },
+    { key: "featuresBody", label: "Features body", type: "textarea", rows: 3 },
+    {
+      key: "features",
+      label: "Feature cards (shared by all models)",
+      type: "list",
+      itemType: "group",
+      itemLabel: "Feature",
+      fields: [
+        { key: "icon", label: "Icon", type: "icon" },
+        { key: "title", label: "Title", type: "text" },
+        { key: "body", label: "Body", type: "textarea", rows: 2 },
+      ],
+    },
+    { key: "specsHeading", label: "Specs heading", type: "text" },
+    {
+      key: "specBadges",
+      label: "Spec badges",
+      type: "list",
+      itemType: "group",
+      itemLabel: "Badge",
+      fields: [
+        { key: "icon", label: "Icon", type: "icon" },
+        { key: "label", label: "Label", type: "text" },
+      ],
+    },
+    { key: "datasheetNote", label: "Datasheet note", type: "textarea", rows: 2 },
+    { key: "ctaEyebrow", label: "Bottom CTA · eyebrow", type: "text" },
+    { key: "ctaHeading", label: "Bottom CTA · heading", type: "text" },
+    { key: "ctaHighlight", label: "Bottom CTA · highlight", type: "text" },
+    { key: "ctaBody", label: "Bottom CTA · body", type: "textarea", rows: 3 },
+    ctaGroup("ctaPrimary", "Bottom CTA · primary"),
+    ctaGroup("ctaSecondary", "Bottom CTA · secondary"),
+    {
+      key: "skus",
+      label: "Models",
+      type: "list",
+      itemType: "group",
+      itemLabel: "Model",
+      collapsed: true,
+      help: "One entry per model page (/products/<slug>). Open a model to upload its own showcase photo, phone photo, cut-out and gallery. The name is built from voltage + capacity — never add internal cell configuration.",
+      fields: [
+        {
+          key: "slug",
+          label: "URL slug",
+          type: "text",
+          help: "Page lives at /products/<slug>. Changing it changes the address.",
+        },
+        { key: "voltage", label: "Nominal voltage (e.g. 60.8V)", type: "text" },
+        { key: "capacity", label: "Capacity (e.g. 30Ah)", type: "text" },
+        { key: "overview", label: "Overview line", type: "textarea", rows: 2 },
+        {
+          key: "badges",
+          label: "Quick badges",
+          type: "list",
+          itemType: "text",
+          itemLabel: "Badge",
+        },
+        {
+          key: "keyFigures",
+          label: "Key figures (hero spec rail)",
+          type: "list",
+          itemType: "group",
+          itemLabel: "Figure",
+          fields: [
+            { key: "k", label: "Value", type: "text" },
+            { key: "v", label: "Label", type: "text" },
+          ],
+        },
+        showcaseImageField,
+        showcaseImageMobileField,
+        showcaseVideoField,
+        {
+          key: "heroImage",
+          label: "Product cut-out (cards & menus)",
+          type: "image",
+          dimensions: "2000 × 1500 px",
+          help: "4:3, transparent PNG cut-out, product centred at ~70% width. Blank shows the illustrated pack.",
+        },
+        {
+          key: "gallery",
+          label: "Gallery",
+          type: "list",
+          itemType: "group",
+          itemLabel: "Image",
+          fields: [
+            {
+              key: "src",
+              label: "Image",
+              type: "image",
+              dimensions: "2000 × 1500 px",
+              help: "4:3 landscape, JPG/WebP, ≤500 KB.",
+            },
+            { key: "alt", label: "Alt text", type: "text" },
+          ],
+        },
+        {
+          key: "datasheetUrl",
+          label: "Full datasheet PDF link",
+          type: "url",
+          help: "Shows 'Download full datasheet' when set; otherwise a request-by-email link.",
+        },
+        {
+          key: "specGroups",
+          label: "Spec groups",
+          type: "list",
+          itemType: "group",
+          itemLabel: "Group",
+          fields: [
+            { key: "title", label: "Group title", type: "text" },
+            {
+              key: "rows",
+              label: "Rows",
+              type: "list",
+              itemType: "group",
+              itemLabel: "Row",
+              fields: [
+                { key: "label", label: "Label", type: "text" },
+                { key: "value", label: "Value", type: "text" },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 
   about: [
     seoGroup,
-    { key: "breadcrumb", label: "Breadcrumb label", type: "text" },
     { key: "heroEyebrow", label: "Hero · eyebrow", type: "text" },
     { key: "heroTitlePrefix", label: "Hero title · prefix", type: "text" },
     {
@@ -378,6 +682,8 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
     },
     { key: "heroTitleSuffix", label: "Hero title · suffix", type: "text" },
     { key: "heroBody", label: "Hero · body copy", type: "textarea", rows: 3 },
+    ctaGroup("heroCtaPrimary", "Hero · primary CTA"),
+    ctaGroup("heroCtaSecondary", "Hero · secondary CTA"),
 
     { key: "missionEyebrow", label: "Mission · eyebrow", type: "text" },
     { key: "missionHeadingPrefix", label: "Mission heading · prefix", type: "text" },
@@ -451,12 +757,18 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
 
   dealer: [
     seoGroup,
-    { key: "breadcrumb", label: "Breadcrumb label", type: "text" },
     { key: "heroEyebrow", label: "Hero · eyebrow", type: "text" },
     { key: "heroTitlePrefix", label: "Hero title · prefix", type: "text" },
     { key: "heroTitleHighlight", label: "Hero title · highlighted", type: "text" },
     { key: "heroBody", label: "Hero · body copy", type: "textarea", rows: 3 },
     ctaGroup("ctaPrimary", "Hero · primary CTA"),
+    {
+      key: "showPhoneCta",
+      label: "Hero · show phone button",
+      type: "select",
+      options: ["true", "false"],
+      help: "Shows the global contact phone next to the CTA once a real number is set.",
+    },
 
     { key: "benefitsEyebrow", label: "Benefits · eyebrow", type: "text" },
     { key: "benefitsHeading", label: "Benefits · heading", type: "text" },
@@ -474,8 +786,13 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
       ],
     },
 
-    { key: "stepsEyebrow", label: "Steps · eyebrow", type: "text" },
-    { key: "stepsHeading", label: "Steps · heading", type: "text" },
+    {
+      key: "stepsEyebrow",
+      label: "Steps · eyebrow",
+      type: "text",
+      help: "On desktop the steps play in the hero, headed by this eyebrow; on phones they get their own section.",
+    },
+    { key: "stepsHeading", label: "Steps · heading (phones)", type: "text" },
     {
       key: "steps",
       label: "Onboarding steps",
@@ -489,8 +806,18 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
       ],
     },
 
-    { key: "citiesLabel", label: "Cities marquee · label", type: "text" },
-    { key: "cities", label: "Cities", type: "list", itemType: "text", itemLabel: "City" },
+    { key: "cityEyebrow", label: "City step · eyebrow", type: "text" },
+    { key: "cityHeading", label: "City step · heading", type: "text" },
+    { key: "cityBody", label: "City step · intro", type: "textarea", rows: 2 },
+    { key: "cityQuestion", label: "City step · question", type: "text" },
+    { key: "cityHint", label: "City step · hint", type: "text" },
+    { key: "cityPlaceholder", label: "City step · input placeholder", type: "text" },
+    {
+      key: "cityButton",
+      label: "City step · button prefix",
+      type: "text",
+      help: "Followed by the city the visitor typed, e.g. 'Apply for Siliguri'.",
+    },
 
     { key: "faqEyebrow", label: "FAQ · eyebrow", type: "text" },
     { key: "faqHeading", label: "FAQ · heading", type: "text" },
@@ -509,7 +836,6 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
 
   specs: [
     seoGroup,
-    { key: "breadcrumb", label: "Breadcrumb label", type: "text" },
     { key: "heroEyebrow", label: "Hero · eyebrow", type: "text" },
     { key: "heroTitlePrefix", label: "Hero title · prefix", type: "text" },
     { key: "heroTitleHighlight", label: "Hero title · highlighted", type: "text" },
@@ -519,8 +845,16 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
 
     { key: "datasheetEyebrow", label: "Datasheet · eyebrow", type: "text" },
     { key: "datasheetHeading", label: "Datasheet · heading", type: "text" },
+    { key: "datasheetBody", label: "Datasheet · intro", type: "textarea", rows: 2 },
     { key: "datasheetDownloadLabel", label: "Download button label", type: "text" },
-    { key: "datasheetDownloadHref", label: "Download button link", type: "url" },
+    {
+      key: "datasheetDownloadHref",
+      label: "LOHIX 48 · datasheet PDF link",
+      type: "url",
+      help: "2W models use the PDF link set on each model in '2W batteries'. Models without a PDF show a request-by-email button.",
+    },
+    { key: "datasheetViewLabel", label: "Product link prefix (e.g. 'View')", type: "text" },
+    { key: "twoWheelerCtaLabel", label: "Hero · 2W button label", type: "text" },
 
     { key: "comparisonEyebrow", label: "Comparison · eyebrow", type: "text" },
     { key: "comparisonHeading", label: "Comparison · heading", type: "text" },

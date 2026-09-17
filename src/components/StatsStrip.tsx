@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
-import { Reveal } from "./Reveal";
 import { useContent } from "@/cms/useContent";
+import { SectionHeader } from "@/components/system/SectionHeader";
+import { StageBackdrop } from "@/components/system/StageBackdrop";
 
 /**
  * Splits a CMS value like "5.12kWh" into the number that animates (5.12),
@@ -59,27 +60,17 @@ export function StatsStrip() {
   const c = useContent("stats");
 
   return (
-    <section className="w-full bg-ink text-paper-2 px-5 sm:px-6 py-16 sm:py-20 relative overflow-hidden">
-      <div
-        className="absolute inset-0 opacity-[0.08] pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, #B7E26D 1px, transparent 1px), linear-gradient(to bottom, #B7E26D 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-        }}
-      />
-      <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[680px] h-[420px] rounded-full bg-lohix-lime/10 blur-[140px]" />
-      <div className="relative max-w-6xl mx-auto">
-        <Reveal className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 pill border border-white/15 bg-white/[0.04] px-3 py-1 text-xxs uppercase tracking-[0.2em] text-white/60">
-            <span className="w-1 h-1 rounded-full bg-lohix-lime pulse-dot" />
-            {c.eyebrow}
-          </div>
-          <h2 className="mt-5 font-sans text-[32px] sm:text-[44px] md:text-[56px] leading-[1.02] tracking-[-0.03em]">
-            {c.headingPrefix} <em className="italic text-lohix-lime">{c.headingHighlight}</em>
-          </h2>
-        </Reveal>
-        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-px bg-white/10 rounded-2xl overflow-hidden border border-white/10">
+    <section className="section relative isolate overflow-hidden bg-night text-white">
+      <StageBackdrop glow="top" />
+      <div className="container-x relative">
+        <SectionHeader
+          tone="dark"
+          layout="stack"
+          eyebrow={c.eyebrow}
+          title={c.headingPrefix}
+          accent={c.headingHighlight}
+        />
+        <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-[12px] border border-white/10 bg-white/10 md:mt-16 md:grid-cols-4">
           {c.items.map((s, i) => {
             const { target, suffix, decimals } = parseStatValue(s.value);
             return (
@@ -88,14 +79,14 @@ export function StatsStrip() {
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="bg-ink p-6 sm:p-8"
+                transition={{ duration: 0.6, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-night-2 p-6 sm:p-8"
               >
-                <div className="font-sans text-[34px] sm:text-[44px] leading-none tracking-[-0.03em] text-lohix-lime">
+                <div className="tnum text-[34px] font-semibold leading-none tracking-[-0.035em] text-lohix-lime sm:text-[46px]">
                   <CountUp to={target} suffix={suffix} decimals={decimals} />
                 </div>
-                <div className="mt-3 text-[13px] font-medium">{s.label}</div>
-                {s.sub && <div className="mt-1 text-[11px] text-white/50">{s.sub}</div>}
+                <div className="mt-4 text-[14px] font-medium">{s.label}</div>
+                {s.sub && <div className="t-small mt-1 text-white/45">{s.sub}</div>}
               </motion.div>
             );
           })}

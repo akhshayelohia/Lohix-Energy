@@ -18,7 +18,8 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  SECTIONS,
+  SECTION_GROUPS,
+  SECTION_PATHS,
   SECTION_LABELS,
   SECTION_DESCRIPTIONS,
   DEFAULTS,
@@ -235,24 +236,28 @@ function Studio({ email }: { email: string }) {
               </div>
             </div>
           </button>
-          <div className="px-3 pt-4 pb-1 text-[9px] uppercase tracking-[0.25em] text-white/25">
-            Content
-          </div>
-          {SECTIONS.map((s) => (
-            <button
-              key={s}
-              onClick={() => setActive(s)}
-              className={`w-full text-left rounded-lg px-3 py-2.5 transition-colors ${
-                active === s
-                  ? "bg-lohix-lime/[0.1] text-lohix-lime border border-lohix-lime/20"
-                  : "text-white/60 hover:text-white hover:bg-white/[0.04] border border-transparent"
-              }`}
-            >
-              <div className="text-[13px] font-medium">{SECTION_LABELS[s]}</div>
-              <div className="text-[10px] text-white/30 mt-0.5 line-clamp-2">
-                {SECTION_DESCRIPTIONS[s]}
+          {SECTION_GROUPS.map((group) => (
+            <div key={group.label} className="space-y-0.5">
+              <div className="px-3 pt-5 pb-1 text-[9px] uppercase tracking-[0.25em] text-white/25">
+                {group.label}
               </div>
-            </button>
+              {group.sections.map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setActive(s)}
+                  className={`w-full text-left rounded-lg px-3 py-2.5 transition-colors ${
+                    active === s
+                      ? "bg-lohix-lime/[0.1] text-lohix-lime border border-lohix-lime/20"
+                      : "text-white/60 hover:text-white hover:bg-white/[0.04] border border-transparent"
+                  }`}
+                >
+                  <div className="text-[13px] font-medium">{SECTION_LABELS[s]}</div>
+                  <div className="text-[10px] text-white/30 mt-0.5 line-clamp-2">
+                    {SECTION_DESCRIPTIONS[s]}
+                  </div>
+                </button>
+              ))}
+            </div>
           ))}
         </nav>
         <div className="p-3 border-t border-white/[0.08] space-y-1">
@@ -389,6 +394,14 @@ function SectionEditor({ section }: { section: SectionKey }) {
             {SECTION_LABELS[section]}
           </h1>
           <p className="mt-2 text-[13px] text-white/50 max-w-xl">{SECTION_DESCRIPTIONS[section]}</p>
+          <a
+            href={SECTION_PATHS[section]}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-3 inline-flex items-center gap-1.5 text-[12px] text-lohix-lime/80 hover:text-lohix-lime transition-colors"
+          >
+            View on site <ExternalLink className="w-3 h-3" />
+          </a>
         </div>
         <div className="flex items-center gap-2">
           <button

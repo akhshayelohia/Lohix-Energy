@@ -258,7 +258,7 @@ function ListField({
       </div>
       <div className="space-y-2">
         {arr.map((item, i) => {
-          const isOpen = open[i] !== false; // default open
+          const isOpen = open[i] ?? !field.collapsed;
           return (
             <div key={i} className="rounded-lg border border-white/[0.07] bg-white/[0.02]">
               <div className="flex items-center justify-between px-3 py-2 border-b border-white/[0.05]">
@@ -277,7 +277,13 @@ function ListField({
                   </span>
                   {field.itemType === "group" && (
                     <span className="text-white/85 truncate max-w-[260px]">
-                      {item?.title || item?.label || item?.k || item?.name || ""}
+                      {item?.title ||
+                        item?.label ||
+                        item?.k ||
+                        item?.name ||
+                        (item?.voltage ? `LOHIX ${item.voltage} ${item.capacity ?? ""}` : "") ||
+                        item?.alt ||
+                        ""}
                     </span>
                   )}
                   {field.itemType === "text" && (

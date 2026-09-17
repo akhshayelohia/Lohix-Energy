@@ -8,6 +8,28 @@ export type Database = {
   };
   public: {
     Tables: {
+      city_interest: {
+        Row: {
+          city: string;
+          city_key: string | null;
+          created_at: string;
+          id: string;
+          source: string;
+        };
+        Insert: {
+          city: string;
+          created_at?: string;
+          id?: string;
+          source?: string;
+        };
+        Update: {
+          city?: string;
+          created_at?: string;
+          id?: string;
+          source?: string;
+        };
+        Relationships: [];
+      };
       dealer_enquiries: {
         Row: {
           city: string;

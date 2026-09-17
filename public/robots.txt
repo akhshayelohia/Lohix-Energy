@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin
 
-Sitemap: https://lohix.lovable.app/sitemap.xml
+Sitemap: https://lohixenergy.com/sitemap.xml

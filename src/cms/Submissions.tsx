@@ -14,6 +14,7 @@ import {
   RadioTower,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { CityInsights } from "./CityInsights";
 
 type Warranty = {
   id: string;
@@ -37,7 +38,7 @@ type Dealer = {
 };
 
 export function Submissions() {
-  const [tab, setTab] = useState<"warranty" | "dealer">("warranty");
+  const [tab, setTab] = useState<"warranty" | "dealer" | "cities">("warranty");
   // submissions auto-refresh every 15s via react-query refetchInterval
 
   return (
@@ -54,8 +55,8 @@ export function Submissions() {
             Submissions
           </h1>
           <p className="mt-2 text-[13px] text-white/50 max-w-xl">
-            Warranty registrations and dealer enquiries from the public site. Updates appear here in
-            real time.
+            Warranty registrations, dealer enquiries, and the cities visitors say they operate in.
+            Refreshes automatically.
           </p>
         </div>
         <div className="flex items-center gap-1 p-1 rounded-full border border-white/10 bg-white/[0.03]">
@@ -65,10 +66,21 @@ export function Submissions() {
           <TabBtn active={tab === "dealer"} onClick={() => setTab("dealer")}>
             Dealer enquiries
           </TabBtn>
+          <TabBtn active={tab === "cities"} onClick={() => setTab("cities")}>
+            City interest
+          </TabBtn>
         </div>
       </div>
 
-      <div className="mt-8">{tab === "warranty" ? <WarrantyList /> : <DealerList />}</div>
+      <div className="mt-8">
+        {tab === "warranty" ? (
+          <WarrantyList />
+        ) : tab === "dealer" ? (
+          <DealerList />
+        ) : (
+          <CityInsights />
+        )}
+      </div>
     </div>
   );
 }
