@@ -97,14 +97,14 @@ export function Hero() {
       <div className="container-x relative z-10 flex h-full flex-col items-center justify-center pb-16 pt-24 text-center">
         <a
           href={safeHref(c.ctaPrimary.href)}
-          className="animate-rise group inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.05] py-1 pl-1 pr-3.5 text-[12px] text-white/80 backdrop-blur transition-colors hover:bg-white/[0.1]"
+          className="animate-rise group inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.05] py-1 pl-1 pr-3.5 text-[12px] text-white backdrop-blur transition-colors hover:bg-white/[0.1]"
           style={delay(0)}
         >
           <span className="rounded-full bg-lohix-lime px-2 py-0.5 text-[10px] font-semibold tracking-wider text-ink">
             {c.chipBadge}
           </span>
           {c.chipText}
-          <ArrowRight className="h-3 w-3 text-white/55 transition-transform group-hover:translate-x-0.5" />
+          <ArrowRight className="h-3 w-3 text-white transition-transform group-hover:translate-x-0.5" />
         </a>
 
         <h1
@@ -116,7 +116,7 @@ export function Hero() {
           <span className="text-lohix-lime">{c.headlineHighlight}</span> {c.headlineLine2}
         </h1>
 
-        <p className="animate-rise t-lead mt-6 max-w-[52ch] text-white/60" style={delay(180)}>
+        <p className="animate-rise t-lead mt-6 max-w-[52ch] text-white" style={delay(180)}>
           {c.subline}
         </p>
 
@@ -137,7 +137,7 @@ export function Hero() {
           style={delay(400)}
         >
           {c.trustItems.map((t, i) => (
-            <li key={`${t}-${i}`} className="t-label inline-flex items-center gap-2 text-white/60">
+            <li key={`${t}-${i}`} className="t-label inline-flex items-center gap-2 text-white">
               <span
                 className={
                   i === 0

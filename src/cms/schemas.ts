@@ -335,6 +335,54 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
     ctaGroup("dealerLink", "Footer link"),
   ],
 
+  emails: [
+    {
+      key: "warrantySubject",
+      label: "Warranty · subject line",
+      type: "text",
+      help: "Sent to the customer right after they register. {serial} becomes their battery serial.",
+    },
+    {
+      key: "warrantyHeading",
+      label: "Warranty · heading",
+      type: "text",
+      help: "{name} becomes their first name.",
+    },
+    {
+      key: "warrantyBody",
+      label: "Warranty · message",
+      type: "textarea",
+      rows: 5,
+      help: "A blank line starts a new paragraph. A summary of what they registered is added below automatically.",
+    },
+    {
+      key: "dealerSubject",
+      label: "Dealer · subject line",
+      type: "text",
+      help: "Sent to the applicant right after they apply on /dealer.",
+    },
+    {
+      key: "dealerHeading",
+      label: "Dealer · heading",
+      type: "text",
+      help: "{name} becomes their first name.",
+    },
+    {
+      key: "dealerBody",
+      label: "Dealer · message",
+      type: "textarea",
+      rows: 5,
+      help: "{city} becomes the city they entered. Only promise a response time the team can keep.",
+    },
+    { key: "signOff", label: "Sign-off", type: "text" },
+    {
+      key: "footer",
+      label: "Footer line",
+      type: "text",
+      help: "Company name and address shown at the bottom of every email.",
+    },
+  ],
+
   range: [
     { key: "eyebrow", label: "Eyebrow", type: "text" },
     { key: "heading", label: "Heading", type: "text" },

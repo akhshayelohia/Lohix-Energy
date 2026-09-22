@@ -30,5 +30,10 @@ DROP POLICY IF EXISTS "Admins can delete city interest" ON public.city_interest;
 CREATE POLICY "Admins can delete city interest" ON public.city_interest
   FOR DELETE TO authenticated USING (public.is_admin());
 
+-- Explicit table privileges (row-level security above still decides who can do what).
+-- Visitors may only add rows; only signed-in admins can read or delete them.
+GRANT INSERT ON public.city_interest TO anon, authenticated;
+GRANT SELECT, DELETE ON public.city_interest TO authenticated;
+
 CREATE INDEX IF NOT EXISTS idx_city_interest_created ON public.city_interest (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_city_interest_key ON public.city_interest (city_key);

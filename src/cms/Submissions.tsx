@@ -32,6 +32,7 @@ type Warranty = {
 type Dealer = {
   id: string;
   name: string;
+  email?: string | null;
   phone: string;
   city: string;
   created_at: string;
@@ -207,6 +208,7 @@ function DealerList() {
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-[12px]">
             <Row icon={Phone} value={d.phone} />
             <Row icon={MapPin} value={d.city} />
+            {d.email && <Row icon={Mail} value={d.email} />}
           </div>
         </div>
       ))}

@@ -82,7 +82,7 @@ export function PageHero({
                 <div className="mt-6">{heading}</div>
                 {body && (
                   <p
-                    className="animate-rise t-lead mt-6 max-w-xl text-white/60 short:mt-3"
+                    className="animate-rise t-lead mt-6 max-w-xl text-white short:mt-3"
                     style={delay(180)}
                   >
                     {body}
@@ -105,7 +105,7 @@ export function PageHero({
               <div className="mt-6 grid gap-6 md:grid-cols-12 md:items-end md:gap-10">
                 {heading}
                 {body && (
-                  <p className="animate-rise t-lead text-white/60 md:col-span-4" style={delay(180)}>
+                  <p className="animate-rise t-lead text-white md:col-span-4" style={delay(180)}>
                     {body}
                   </p>
                 )}

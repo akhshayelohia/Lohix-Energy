@@ -29,7 +29,7 @@ export function VariantPicker({
         if (options.length < 2) return null;
         return (
           <div key={dim} className="flex items-center gap-4">
-            <span className="t-label w-[72px] shrink-0 text-white/40">{label}</span>
+            <span className="t-label w-[72px] shrink-0 text-white">{label}</span>
             <div className="inline-flex rounded-full border border-white/10 bg-white/[0.04] p-1 backdrop-blur">
               {options.map((opt) => {
                 const target =
@@ -45,7 +45,7 @@ export function VariantPicker({
                     aria-current={active ? "true" : undefined}
                     className={cn(
                       "tap tnum relative rounded-full px-4 py-1.5 text-[12.5px] font-medium transition-colors duration-300",
-                      active ? "text-ink" : "text-white/60 hover:text-white",
+                      active ? "text-ink" : "text-white hover:text-white",
                     )}
                   >
                     {active && (

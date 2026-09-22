@@ -102,11 +102,11 @@ function Slider({
   return (
     <div>
       <div className="flex items-baseline justify-between gap-4">
-        <label htmlFor={id} className="text-[13px] font-medium text-white/80">
+        <label htmlFor={id} className="text-[13px] font-medium text-white">
           {label}
         </label>
         <span className="tnum text-[15px] font-semibold text-white">
-          {value} <span className="text-[12px] font-normal text-white/55">{unit}</span>
+          {value} <span className="text-[12px] font-normal text-white">{unit}</span>
         </span>
       </div>
       <input
@@ -120,7 +120,7 @@ function Slider({
         className="range-input mt-4"
         style={{ "--fill": `${fill}%` } as CSSProperties}
       />
-      {hint && <p className="mt-2.5 text-[12px] text-white/50">{hint}</p>}
+      {hint && <p className="mt-2.5 text-[12px] text-white">{hint}</p>}
     </div>
   );
 }
@@ -174,11 +174,11 @@ export function RangeEstimator({
       <div className="relative grid lg:grid-cols-12">
         <div className="space-y-9 p-7 sm:p-10 lg:col-span-7 lg:border-r lg:border-white/10">
           <fieldset>
-            <legend className="text-[13px] font-medium text-white/80">Battery</legend>
+            <legend className="text-[13px] font-medium text-white">Battery</legend>
             <div className="mt-4 space-y-3">
               {groups.map((g) => (
                 <div key={g.kind} className="flex flex-wrap items-center gap-2">
-                  <span className="t-label w-full whitespace-nowrap text-white/55 sm:w-32 sm:shrink-0">
+                  <span className="t-label w-full whitespace-nowrap text-white sm:w-32 sm:shrink-0">
                     {g.title}
                   </span>
                   {models
@@ -195,7 +195,7 @@ export function RangeEstimator({
                             "tap tnum rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium transition-colors duration-200",
                             active
                               ? "border-lohix-lime bg-lohix-lime text-ink"
-                              : "border-white/12 text-white/70 hover:border-white/30 hover:text-white",
+                              : "border-white/12 text-white hover:border-white/30 hover:text-white",
                           )}
                         >
                           {m.label}
@@ -232,7 +232,7 @@ export function RangeEstimator({
           />
 
           <fieldset>
-            <legend className="text-[13px] font-medium text-white/80">Days on the road</legend>
+            <legend className="text-[13px] font-medium text-white">Days on the road</legend>
             <div className="mt-4 inline-flex rounded-full border border-white/10 bg-white/[0.04] p-1">
               {DAYS.map((d) => (
                 <button
@@ -242,7 +242,7 @@ export function RangeEstimator({
                   onClick={() => setDays(d)}
                   className={cn(
                     "tap rounded-full px-4 py-1.5 text-[12.5px] font-medium transition-colors",
-                    days === d ? "bg-white text-ink" : "text-white/65 hover:text-white",
+                    days === d ? "bg-white text-ink" : "text-white hover:text-white",
                   )}
                 >
                   {d} / week
@@ -256,14 +256,14 @@ export function RangeEstimator({
           aria-live="polite"
           className="flex flex-col border-t border-white/10 p-7 sm:p-10 lg:col-span-5 lg:border-t-0"
         >
-          <p className="t-label text-white/50">Estimated range per charge</p>
+          <p className="t-label text-white">Estimated range per charge</p>
           <p className="mt-3 text-[64px] font-semibold leading-none tracking-[-0.045em] text-white sm:text-[80px]">
             <Figure value={range} />
-            <span className="ml-2 text-[20px] font-medium tracking-normal text-white/55">km</span>
+            <span className="ml-2 text-[20px] font-medium tracking-normal text-white">km</span>
           </p>
 
           <div className="mt-8">
-            <div className="flex justify-between text-[12px] text-white/55">
+            <div className="flex justify-between text-[12px] text-white">
               <span>Your day: {km} km</span>
               <span>{needsTopUp ? "Needs a mid-day top-up" : "Covered on one charge"}</span>
             </div>
@@ -278,20 +278,20 @@ export function RangeEstimator({
 
           <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-[10px] border border-white/10 bg-white/10">
             <div className="bg-night-2 p-4">
-              <dt className="text-[12px] text-white/55">Pack energy</dt>
+              <dt className="text-[12px] text-white">Pack energy</dt>
               <dd className="mt-1 text-[20px] font-semibold text-white">
                 <Figure value={energy} />
-                <span className="ml-1 text-[12px] font-normal text-white/55">Wh</span>
+                <span className="ml-1 text-[12px] font-normal text-white">Wh</span>
               </dd>
             </div>
             <div className="bg-night-2 p-4">
-              <dt className="text-[12px] text-white/55">Charges per day</dt>
+              <dt className="text-[12px] text-white">Charges per day</dt>
               <dd className="mt-1 text-[20px] font-semibold text-white">
                 <Figure value={chargesPerDay} decimals={1} />
               </dd>
             </div>
             <div className="col-span-2 bg-night-2 p-4">
-              <dt className="text-[12px] text-white/55">
+              <dt className="text-[12px] text-white">
                 Rated {model.cycles.toLocaleString("en-IN")}+ cycles at this pace
               </dt>
               <dd className="mt-1 text-[20px] font-semibold text-white">
@@ -300,14 +300,14 @@ export function RangeEstimator({
                 ) : (
                   <>
                     <Figure value={years} decimals={1} />
-                    <span className="ml-1 text-[12px] font-normal text-white/55">years</span>
+                    <span className="ml-1 text-[12px] font-normal text-white">years</span>
                   </>
                 )}
               </dd>
             </div>
           </dl>
 
-          <p className="mt-auto pt-8 text-[11.5px] leading-relaxed text-white/45">
+          <p className="mt-auto pt-8 text-[11.5px] leading-relaxed text-white">
             Estimate only: rated pack energy ÷ the energy use you set. Real range depends on load,
             speed, terrain, temperature and battery age. Cycle life is a rated figure, not a
             warranty term.

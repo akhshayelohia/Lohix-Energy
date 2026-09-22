@@ -30,7 +30,7 @@ function StatusScreen({
     <div className="relative isolate flex min-h-screen items-center overflow-hidden bg-night text-white">
       <StageBackdrop glow="top" />
       <div className="container-x relative py-24">
-        <div className="t-label text-white/45">
+        <div className="t-label text-white">
           <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-lohix-lime align-middle" />
           LOHIX Energy
         </div>
@@ -38,7 +38,7 @@ function StatusScreen({
           {code}
         </div>
         <h1 className="t-h2 mt-4 text-white">{title}</h1>
-        <p className="t-lead mt-4 max-w-md text-white/55">{body}</p>
+        <p className="t-lead mt-4 max-w-md text-white">{body}</p>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">{children}</div>
       </div>
     </div>

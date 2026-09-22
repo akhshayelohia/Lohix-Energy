@@ -16,7 +16,7 @@ export function Eyebrow({ children, tone = "light", className, dot = tone === "l
     <div
       className={cn(
         "t-label inline-flex items-center gap-2",
-        tone === "dark" ? "text-white/60" : "text-lohix-lime-deep",
+        tone === "dark" ? "text-lohix-lime" : "text-lohix-lime-deep",
         className,
       )}
     >

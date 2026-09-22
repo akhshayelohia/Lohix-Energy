@@ -183,11 +183,11 @@ function AboutPage() {
                 </span>
               </div>
               <div className="absolute inset-x-0 bottom-0 p-6 sm:p-10">
-                <div className="t-label tnum text-white/55">{c.facilityCoordinates}</div>
+                <div className="t-label tnum text-white">{c.facilityCoordinates}</div>
                 <div className="mt-3 text-[30px] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-[42px]">
                   {c.facilityCity} <span className="text-lohix-lime">{c.facilityRegion}</span>
                 </div>
-                <div className="t-small mt-2 text-white/60">
+                <div className="t-small mt-2 text-white">
                   {c.facilityCompany} · {g.contactEmail}
                 </div>
               </div>

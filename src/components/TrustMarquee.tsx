@@ -22,7 +22,7 @@ export function TrustMarquee() {
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-paper to-transparent" />
         <div className="flex w-max gap-3 whitespace-nowrap animate-marquee">
           {track.map((t, i) => (
-            <span key={`${t}-${i}`} className="chip px-4 py-2 text-[13px] font-medium text-ink/80">
+            <span key={`${t}-${i}`} className="chip px-4 py-2 text-[13px] font-medium text-ink">
               {t}
             </span>
           ))}

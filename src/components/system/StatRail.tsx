@@ -40,7 +40,7 @@ export function StatRail({
           >
             {f.k}
           </dd>
-          <dt className={cn("t-label mt-2", dark ? "text-white/45" : "text-muted-ink")}>{f.v}</dt>
+          <dt className={cn("t-label mt-2", dark ? "text-white" : "text-muted-ink")}>{f.v}</dt>
         </div>
       ))}
     </dl>

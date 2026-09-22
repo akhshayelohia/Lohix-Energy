@@ -7,6 +7,7 @@ export const SECTIONS = [
   "global",
   "footer",
   "buy_dialog",
+  "emails",
   "hero",
   "trust",
   "features",
@@ -29,6 +30,7 @@ export const SECTION_LABELS: Record<SectionKey, string> = {
   global: "Global settings",
   footer: "Footer",
   buy_dialog: "Where to buy pop-up",
+  emails: "Auto-reply emails",
   hero: "Hero",
   trust: "Certification strip",
   features: "Engineered specs",
@@ -47,7 +49,7 @@ export const SECTION_LABELS: Record<SectionKey, string> = {
 
 // Sidebar grouping in the admin studio.
 export const SECTION_GROUPS: { label: string; sections: SectionKey[] }[] = [
-  { label: "Site-wide", sections: ["global", "footer", "buy_dialog"] },
+  { label: "Site-wide", sections: ["global", "footer", "buy_dialog", "emails"] },
   {
     label: "Landing page",
     sections: [
@@ -70,6 +72,7 @@ export const SECTION_PATHS: Record<SectionKey, string> = {
   global: "/",
   footer: "/",
   buy_dialog: "/#buy",
+  emails: "/#warranty",
   hero: "/",
   trust: "/",
   features: "/#features",
@@ -91,6 +94,8 @@ export const SECTION_DESCRIPTIONS: Record<SectionKey, string> = {
   footer: "Tagline, dealer button, Explore links, contact lines, copyright.",
   buy_dialog:
     "The pop-up every 'Where to buy' / #buy link opens. Phone numbers come from the footer contact lines and the global phone.",
+  emails:
+    "Automatic replies sent after a warranty registration or dealer application. Use {name}, {serial} and {city} as placeholders.",
   hero: "Chip, headline, subline, CTAs, background video, trust strip.",
   trust:
     "Scrolling certification strip. Only list claims you can evidence — every item here is a public product claim.",
@@ -336,18 +341,18 @@ export const heroDefault: HeroContent = {
   videoUrl: "",
   videoUrlMobile: "",
   chipBadge: "NEW",
-  chipText: "Register your Lohix Energy warranty",
+  chipText: "Register your LOHIX warranty",
   headlineLine1: "Power that moves",
   headlineHighlight: "a billion",
   headlineLine2: "journeys.",
   subline:
-    "A smart 51.2V LFP battery engineered for e-rickshaws and EVs across Eastern India. 3500+ cycles. Real BMS protection. Local service.",
+    "Smart LiFePO4 packs built in India — 51.2V for e-rickshaws, 60.8V and 64V for electric two-wheelers. Real BMS protection. Local service.",
   ctaPrimary: { label: "Register warranty", href: "#warranty" },
-  ctaSecondary: { label: "Explore specs", href: "#features" },
+  ctaSecondary: { label: "Explore the range", href: "/products" },
   trustItems: [
     "Live BMS · 24/7",
-    "IP67 design · certification pending",
-    "3500+ cycles",
+    "Sealed design · certification pending",
+    "5 models",
     "Made in India",
   ],
 };
@@ -362,10 +367,10 @@ export const statsDefault: StatsContent = {
   headingPrefix: "Engineered to outlast",
   headingHighlight: "every charge.",
   items: [
-    { value: "3500+", label: "Charge cycles", sub: "LFP chemistry, long life" },
-    { value: "5.12kWh", label: "Usable energy", sub: "51.2V × 100Ah" },
-    { value: "51.2V", label: "Nominal voltage", sub: "100Ah smart pack" },
-    { value: "100Ah", label: "Rated capacity", sub: "Grade A+ LFP cells" },
+    { value: "5", label: "Battery models", sub: "One e-rickshaw pack, four for 2W" },
+    { value: "2500+", label: "Charge cycles", sub: "3500+ on the LOHIX 48" },
+    { value: "64V", label: "Top platform voltage", sub: "51.2V, 60.8V and 64V packs" },
+    { value: "5.12kWh", label: "Largest pack", sub: "From 1824Wh on the 2W range" },
   ],
 };
 
@@ -385,19 +390,19 @@ export const warrantyDefault: WarrantyContent = {
 export const featuresDefault: FeaturesContent = {
   eyebrow: "Engineered specs",
   headingPrefix: "Everything that makes",
-  headingHighlight: "Lohix Energy",
+  headingHighlight: "every LOHIX pack",
   headingSuffix: "relentless.",
-  body: "Nine engineering decisions. One battery built to outlast every shift, monsoon, and pothole between here and the next city.",
+  body: "Nine engineering decisions shared across the range — from the 51.2V e-rickshaw pack to the 60.8V and 64V two-wheeler packs.",
   ctaLabel: "Talk to engineering",
   ctaHref: "#dealer",
   items: [
     {
       id: "voltage",
       label: "Voltage",
-      value: "51.2",
-      unit: "V",
-      title: "Optimized nominal voltage",
-      body: "Tuned for e-rickshaw drive systems — efficient torque without thermal stress.",
+      value: "64",
+      unit: "V · from 51.2V",
+      title: "A platform for every drivetrain",
+      body: "51.2V for e-rickshaw drive systems, 60.8V and 64V for electric two-wheelers.",
       icon: "Zap",
       category: "Power",
     },
@@ -405,9 +410,9 @@ export const featuresDefault: FeaturesContent = {
       id: "capacity",
       label: "Capacity",
       value: "100",
-      unit: "Ah",
-      title: "All-day urban range",
-      body: "100Ah of usable capacity per cycle — built for full shifts on Indian roads.",
+      unit: "Ah · from 30Ah",
+      title: "Commuter to full shift",
+      body: "30Ah and 45Ah packs for two-wheelers, 100Ah for a full e-rickshaw shift.",
       icon: "Battery",
       category: "Power",
     },
@@ -415,29 +420,29 @@ export const featuresDefault: FeaturesContent = {
       id: "energy",
       label: "Energy",
       value: "5.12",
-      unit: "kWh",
+      unit: "kWh · from 1.8kWh",
       title: "Dense, efficient packs",
-      body: "5120Wh of usable energy in a compact, swappable LFP form factor.",
+      body: "From 1824Wh in the compact 2W pack to 5.12kWh on the LOHIX 48.",
       icon: "Activity",
       category: "Power",
     },
     {
       id: "cycles",
       label: "Cycles",
-      value: "3500",
-      unit: "+",
-      title: "Decade-long lifespan",
-      body: "Over 3,500 charge cycles. Outlasts lead-acid five times over.",
+      value: "2500+",
+      unit: "every pack",
+      title: "Years of daily duty",
+      body: "2500+ cycles across the 2W range, 3500+ on the LOHIX 48 — lead-acid manages about 500.",
       icon: "RefreshCw",
       category: "Lifecycle",
     },
     {
       id: "ip",
       label: "Ingress",
-      value: "IP67",
+      value: "Sealed",
       unit: "design",
-      title: "Sealed for monsoon roads",
-      body: "Enclosure engineered to an IP67 design standard for dust and water ingress. Third-party certification is pending.",
+      title: "Built for monsoon roads",
+      body: "An IP67 design standard on the LOHIX 48, dust- and splash-resistant enclosures across the 2W range. Third-party certification is pending.",
       icon: "Shield",
       category: "Safety",
     },
@@ -445,30 +450,31 @@ export const featuresDefault: FeaturesContent = {
       id: "bms",
       label: "BMS",
       value: "Smart",
-      title: "Real-time protection",
-      body: "Cell balancing, thermal cutoff, and fault telemetry — live.",
+      unit: "multi-layer",
+      title: "Real-time protection, every pack",
+      body: "Multi-layer BMS on all five models: cell balancing, thermal cutoff, and fault telemetry — live.",
       icon: "Cpu",
       category: "Safety",
     },
     {
-      id: "peak",
-      label: "Peak",
-      value: "200",
-      unit: "A",
-      title: "High-torque discharge",
-      body: "200A momentary peak discharge for hill starts and overload — not a continuous rating.",
+      id: "models",
+      label: "Range",
+      value: "5",
+      unit: "models",
+      title: "One range, two vehicle classes",
+      body: "The LOHIX 48 for e-rickshaws, plus 60.8V and 64V packs in 30Ah and 45Ah for two-wheelers.",
       icon: "TrendingUp",
       category: "Power",
     },
     {
-      id: "warranty",
-      label: "Warranty",
-      value: "3–4",
-      unit: "yr",
-      title: "Backed for the long haul",
-      body: "3 years on the standard pack, 4 years on GPS variants — serviced locally from our Kolkata facility.",
+      id: "maintenance",
+      label: "Upkeep",
+      value: "Zero",
+      unit: "maintenance",
+      title: "Nothing to top up",
+      body: "Sealed LFP packs across the range — no watering, no acid checks, no seasonal servicing.",
       icon: "BadgeCheck",
-      category: "Origin",
+      category: "Lifecycle",
     },
     {
       id: "origin",
@@ -476,7 +482,7 @@ export const featuresDefault: FeaturesContent = {
       value: "Made",
       unit: "in India",
       title: "Engineered in Kolkata",
-      body: "Assembled in West Bengal. Tested for Eastern India duty cycles.",
+      body: "Every pack assembled in West Bengal and serviced by a team that knows the routes it runs on.",
       icon: "MapPin",
       category: "Origin",
     },
@@ -488,7 +494,7 @@ export const whyLohixDefault: WhyLohixContent = {
   headingPrefix: "Built to",
   headingHighlight: "outlast",
   headingSuffix: ".",
-  body: "Every choice — chemistry, BMS, enclosure, service — is tuned for the duty cycles of Indian fleets. Not theory. Field-proven.",
+  body: "Every choice — chemistry, BMS, enclosure, service — is shared across the range and tuned for Indian duty cycles. Not theory. Field-proven.",
   cards: [
     {
       icon: "Shield",
@@ -497,8 +503,8 @@ export const whyLohixDefault: WhyLohixContent = {
     },
     {
       icon: "Repeat",
-      title: "3500+ cycle life",
-      body: "Outlasts lead-acid 5×. Dramatically lower cost per kilometer over the battery's lifetime.",
+      title: "2500–3500+ cycle life",
+      body: "Outlasts lead-acid several times over on every pack — dramatically lower cost per kilometer.",
     },
     {
       icon: "MapPin",
@@ -702,8 +708,8 @@ export const aboutDefault: AboutContent = {
   values: [
     {
       icon: "ShieldCheck",
-      title: "Safety, never compromised",
-      body: "LFP chemistry, multi-layer BMS, sealed IP67 enclosure — engineered defaults, not upsells.",
+      title: "We never compromise on quality",
+      body: "Compromise isn't something we believe in. LFP chemistry, a multi-layer BMS and a sealed enclosure design are engineered defaults, not upsells.",
     },
     {
       icon: "Compass",
@@ -996,6 +1002,31 @@ export const productsPageDefault: ProductsPageContent = {
   stickyBuyLabel: "Where to buy",
 };
 
+export type EmailsContent = {
+  warrantySubject: string;
+  warrantyHeading: string;
+  warrantyBody: string;
+  dealerSubject: string;
+  dealerHeading: string;
+  dealerBody: string;
+  signOff: string;
+  footer: string;
+};
+
+export const emailsDefault: EmailsContent = {
+  warrantySubject: "Your LOHIX warranty is registered — {serial}",
+  warrantyHeading: "Thanks, {name}. Your warranty is registered.",
+  warrantyBody:
+    "We've recorded the battery below against your name. Keep this email with your purchase invoice — you'll need both for any service or warranty claim.\n\nIf anything here looks wrong, reply to this email and our team will correct it.",
+  dealerSubject: "We've received your LOHIX dealership application",
+  dealerHeading: "Thanks, {name}. Your application is in.",
+  dealerBody:
+    "Our team reviews every application personally and will call you within 48 hours to talk through {city}, your current business and the next steps.\n\nIn the meantime, reply to this email if there's anything you'd like us to know.",
+  signOff: "Team LOHIX",
+  footer:
+    "LOHIX Energy · Aishwarya Nirman Private Limited · Kolkata, West Bengal · lohixenergy.com",
+};
+
 export const DEFAULTS = {
   global: globalDefault,
   hero: heroDefault,
@@ -1007,6 +1038,7 @@ export const DEFAULTS = {
   dealer_cta: dealerCtaDefault,
   footer: footerDefault,
   buy_dialog: buyDialogDefault,
+  emails: emailsDefault,
   range: rangeDefault,
   products_page: productsPageDefault,
   product: productDefault,
@@ -1034,6 +1066,7 @@ export type ContentMap = {
   dealer_cta: DealerCtaContent;
   footer: FooterContent;
   buy_dialog: BuyDialogContent;
+  emails: EmailsContent;
   range: RangeContent;
   products_page: ProductsPageContent;
   product: ProductContent & ShowcaseMedia;

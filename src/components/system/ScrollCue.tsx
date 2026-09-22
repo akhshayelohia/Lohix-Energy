@@ -18,7 +18,7 @@ export function ScrollCue({
       aria-label="Scroll to details"
       className={cn(
         "group absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3 transition-colors hover:text-white short:hidden sm:bottom-8",
-        onMedia ? "text-white/85" : "text-white/45",
+        onMedia ? "text-white" : "text-white",
         className,
       )}
     >

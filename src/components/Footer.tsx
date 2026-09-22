@@ -40,7 +40,7 @@ export function Footer() {
                   <li key={p.id}>
                     <a
                       href={p.href}
-                      className="tnum text-[13px] link-accent inline-block py-1.5 text-ink/80 hover:text-ink md:py-0"
+                      className="tnum text-[13px] link-accent inline-block py-1.5 text-ink hover:text-ink md:py-0"
                     >
                       {p.name}
                     </a>
@@ -56,7 +56,7 @@ export function Footer() {
               <li>
                 <a
                   href="/products"
-                  className="text-[13px] link-accent inline-block py-1.5 text-ink/80 hover:text-ink md:py-0"
+                  className="text-[13px] link-accent inline-block py-1.5 text-ink hover:text-ink md:py-0"
                 >
                   All products
                 </a>
@@ -65,7 +65,7 @@ export function Footer() {
                 <li key={`${l.label}-${l.href}`}>
                   <a
                     href={safeHref(l.href)}
-                    className="text-[13px] link-accent inline-block py-1.5 text-ink/80 hover:text-ink md:py-0"
+                    className="text-[13px] link-accent inline-block py-1.5 text-ink hover:text-ink md:py-0"
                   >
                     {l.label}
                   </a>
@@ -76,7 +76,7 @@ export function Footer() {
 
           <div className="lg:col-span-2">
             <h4 className="t-label text-muted-ink">{c.contactHeading}</h4>
-            <ul className="mt-4 space-y-0.5 text-[13px] text-ink/80 md:mt-5 md:space-y-2.5">
+            <ul className="mt-4 space-y-0.5 text-[13px] text-ink md:mt-5 md:space-y-2.5">
               {c.contactLines.map((line) => {
                 const href = contactHref(line);
                 return (

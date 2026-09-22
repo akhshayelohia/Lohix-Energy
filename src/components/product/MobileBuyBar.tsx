@@ -55,7 +55,7 @@ export function MobileBuyBar({ introId, name, detail, label }: Props) {
               <div className="tnum truncate text-[14px] font-semibold tracking-[-0.01em]">
                 {name}
               </div>
-              {detail && <div className="tnum truncate text-[11.5px] text-white/55">{detail}</div>}
+              {detail && <div className="tnum truncate text-[11.5px] text-white">{detail}</div>}
             </div>
             <a href={BUY_HREF} className="btn btn-lime h-11 shrink-0 px-4 shadow-none">
               {label}

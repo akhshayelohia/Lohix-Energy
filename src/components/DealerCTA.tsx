@@ -1,20 +1,11 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { focusFirstInvalid, friendlySubmitError } from "@/lib/forms";
-import { z } from "zod";
 import { ArrowRight, Check, Loader2, AlertCircle } from "lucide-react";
 import { useContent } from "@/cms/useContent";
-import { supabase } from "@/integrations/supabase/client";
+import { dealerSchema, firstFieldErrors, HONEYPOT_FIELD } from "@/lib/submissions/schemas";
+import { submitDealerEnquiry } from "@/lib/submissions/submit";
 import { Reveal } from "@/components/Reveal";
 import { Eyebrow } from "@/components/system/Eyebrow";
-
-const dealerSchema = z.object({
-  name: z.string().trim().min(2, "Enter your full name").max(80),
-  phone: z
-    .string()
-    .trim()
-    .regex(/^[+0-9\s-]{7,20}$/, "Enter a valid phone number"),
-  city: z.string().trim().min(2, "City required").max(60),
-});
 
 const FIELDS = [
   {
@@ -24,6 +15,14 @@ const FIELDS = [
     type: "text",
     autoComplete: "name",
     autoCapitalize: "words",
+  },
+  {
+    key: "email",
+    label: "Email",
+    placeholder: "you@company.com",
+    type: "email",
+    autoComplete: "email",
+    autoCapitalize: "none",
   },
   {
     key: "phone",
@@ -48,7 +47,7 @@ type Key = (typeof FIELDS)[number]["key"];
 export function DealerCTA({ prefillCity }: { prefillCity?: string }) {
   const c = useContent("dealer_cta");
   const uid = useId();
-  const [form, setForm] = useState({ name: "", phone: "", city: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", city: "" });
 
   useEffect(() => {
     if (prefillCity) setForm((f) => ({ ...f, city: prefillCity }));
@@ -58,30 +57,35 @@ export function DealerCTA({ prefillCity }: { prefillCity?: string }) {
   const [error, setError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Partial<Record<Key, string>>>({});
   const formRef = useRef<HTMLFormElement>(null);
+  const [honeypot, setHoneypot] = useState("");
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     const parsed = dealerSchema.safeParse(form);
     if (!parsed.success) {
-      const next: Partial<Record<Key, string>> = {};
-      for (const issue of parsed.error.issues) {
-        const key = issue.path[0] as Key;
-        if (key && !next[key]) next[key] = issue.message;
-      }
-      setErrors(next);
+      setErrors(firstFieldErrors(parsed.error) as Partial<Record<Key, string>>);
       focusFirstInvalid(formRef.current);
       return;
     }
     setErrors({});
     setSubmitting(true);
-    const { error } = await supabase.from("dealer_enquiries").insert(parsed.data);
-    setSubmitting(false);
-    if (error) {
-      setError(friendlySubmitError(error));
-      return;
+    try {
+      const res = await submitDealerEnquiry({ data: { ...form, [HONEYPOT_FIELD]: honeypot } });
+      if (!res.ok) {
+        if (res.fieldErrors) {
+          setErrors(res.fieldErrors as Partial<Record<Key, string>>);
+          focusFirstInvalid(formRef.current);
+        }
+        setError(res.error);
+        return;
+      }
+      setSubmitted(true);
+    } catch (err) {
+      setError(friendlySubmitError(err as { message?: string }));
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitted(true);
   }
 
   return (
@@ -99,10 +103,10 @@ export function DealerCTA({ prefillCity }: { prefillCity?: string }) {
               <h2 className="t-h2 mt-5 text-white">
                 {c.headingPrefix} <span className="text-lohix-lime">{c.headingHighlight}</span>.
               </h2>
-              <p className="t-body mt-5 max-w-md text-white/55">{c.body}</p>
+              <p className="t-body mt-5 max-w-md text-white">{c.body}</p>
               <ul className="mt-8 space-y-3">
                 {c.benefits.map((p) => (
-                  <li key={p} className="flex items-center gap-3 text-[14px] text-white/80">
+                  <li key={p} className="flex items-center gap-3 text-[14px] text-white">
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-lohix-lime/15">
                       <Check className="h-3 w-3 text-lohix-lime" />
                     </span>
@@ -118,10 +122,21 @@ export function DealerCTA({ prefillCity }: { prefillCity?: string }) {
               noValidate
               className="rounded-[12px] border border-white/10 bg-white/[0.04] p-6 backdrop-blur md:p-8"
             >
+              {/* Spam trap: hidden from people, often filled in by bots. */}
+              <input
+                type="text"
+                name={HONEYPOT_FIELD}
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="absolute -left-[9999px] h-px w-px opacity-0"
+              />
               <div className="space-y-6">
                 {FIELDS.map((field) => (
                   <div key={field.key}>
-                    <label htmlFor={`${uid}-${field.key}`} className="t-label text-white/45">
+                    <label htmlFor={`${uid}-${field.key}`} className="t-label text-white">
                       {field.label}
                     </label>
                     <input
@@ -140,7 +155,7 @@ export function DealerCTA({ prefillCity }: { prefillCity?: string }) {
                         if (errors[field.key]) setErrors({ ...errors, [field.key]: undefined });
                       }}
                       maxLength={120}
-                      className="mt-2 w-full rounded-none border-b border-white/15 bg-transparent py-3 text-[16px] text-white outline-none transition-colors placeholder:text-white/25 focus:border-lohix-lime aria-[invalid=true]:border-red-400 md:py-2.5 md:text-[15px]"
+                      className="mt-2 w-full rounded-none border-b border-white/15 bg-transparent py-3 text-[16px] text-white outline-none transition-colors placeholder:text-lohix-lime/45 focus:border-lohix-lime aria-[invalid=true]:border-red-400 md:py-2.5 md:text-[15px]"
                     />
                     {errors[field.key] && (
                       <p
@@ -180,7 +195,7 @@ export function DealerCTA({ prefillCity }: { prefillCity?: string }) {
                   <AlertCircle className="h-3.5 w-3.5" /> {error}
                 </p>
               )}
-              <p className="mt-4 text-center text-[11.5px] text-white/40">{c.footnote}</p>
+              <p className="mt-4 text-center text-[11.5px] text-white">{c.footnote}</p>
             </form>
           </div>
         </Reveal>

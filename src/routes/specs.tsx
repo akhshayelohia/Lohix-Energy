@@ -164,10 +164,10 @@ function SpecsPage() {
                 <dl className="mt-3 grid grid-cols-2 gap-2">
                   <div className="rounded-[8px] border border-line px-3.5 py-3">
                     <dt className="text-[11px] text-muted-ink">{c.comparisonColA}</dt>
-                    <dd className="tnum mt-1 text-[14px] text-ink/70">{row.a}</dd>
+                    <dd className="tnum mt-1 text-[14px] text-ink">{row.a}</dd>
                   </div>
                   <div className="rounded-[8px] bg-night-2 px-3.5 py-3">
-                    <dt className="inline-flex items-center gap-1.5 text-[11px] text-white/60">
+                    <dt className="inline-flex items-center gap-1.5 text-[11px] text-white">
                       <span className="h-1.5 w-1.5 rounded-full bg-lohix-lime" />
                       {c.comparisonColB}
                     </dt>
@@ -207,7 +207,7 @@ function SpecsPage() {
                     <th scope="row" className="px-6 py-4 text-[13px] font-normal text-muted-ink">
                       {row.k}
                     </th>
-                    <td className="tnum border-l border-line px-6 py-4 text-[14px] text-ink/70">
+                    <td className="tnum border-l border-line px-6 py-4 text-[14px] text-ink">
                       {row.a}
                     </td>
                     <td className="tnum border-l border-line bg-lohix-lime/[0.08] px-6 py-4 text-[14px] font-semibold text-ink">

@@ -313,6 +313,8 @@ function SectionEditor({ section }: { section: SectionKey }) {
     return { ...(DEFAULTS[section] as object), ...(remote ?? {}) };
   }, [row, section]);
 
+  // Draft of arbitrary CMS JSON, edited through the schema-driven FormRenderer.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [draft, setDraft] = useState<any>(initial);
   const [status, setStatus] = useState<{ kind: "ok" | "err" | "idle"; msg?: string }>({
     kind: "idle",

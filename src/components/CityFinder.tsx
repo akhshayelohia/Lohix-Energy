@@ -42,7 +42,7 @@ export function CityFinder({ onRequest, copy }: { onRequest: (city: string) => v
             maxLength={60}
             enterKeyHint="go"
             autoCapitalize="words"
-            className="w-full rounded-full border border-line bg-paper py-3.5 pl-11 pr-5 text-[16px] md:text-[15px] text-ink outline-none transition-colors placeholder:text-muted-ink/70 focus:border-ink"
+            className="w-full rounded-full border border-line bg-paper py-3.5 pl-11 pr-5 text-[16px] md:text-[15px] text-ink outline-none transition-colors placeholder:text-lohix-lime-deep/60 focus:border-ink"
           />
         </div>
         <button

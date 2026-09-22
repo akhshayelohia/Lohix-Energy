@@ -78,7 +78,7 @@ export function RangeShowcase() {
                     <h3 className="tnum mt-5 text-[34px] font-semibold leading-[1.02] tracking-[-0.035em] sm:text-[44px]">
                       {headline}
                     </h3>
-                    <p className="tnum t-small mt-2 text-white/55">{sub}</p>
+                    <p className="tnum t-small mt-2 text-white">{sub}</p>
                     <span className="mt-6 inline-flex items-center gap-2 text-[13px] font-medium text-lohix-lime">
                       {c.linkPrefix} {cat.label}
                       <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />

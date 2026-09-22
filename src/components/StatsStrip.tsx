@@ -86,7 +86,7 @@ export function StatsStrip() {
                   <CountUp to={target} suffix={suffix} decimals={decimals} />
                 </div>
                 <div className="mt-4 text-[14px] font-medium">{s.label}</div>
-                {s.sub && <div className="t-small mt-1 text-white/45">{s.sub}</div>}
+                {s.sub && <div className="t-small mt-1 text-white">{s.sub}</div>}
               </motion.div>
             );
           })}

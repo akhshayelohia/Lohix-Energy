@@ -42,9 +42,10 @@
 
 /*
   LOHIX design tokens.
-  Rule of thumb: lime is a signal colour. Use it for text only on dark
-  surfaces (night / ink); on light surfaces use lime-deep or keep lime to
-  dots, icons and fills.
+  Palette rule: black and green only — no grey anywhere. Text is near-black on
+  light surfaces and white on dark ones; emphasis, labels and accents use lime
+  (on dark) or lime-deep (on light). Hierarchy comes from size and weight, not
+  from faded ink.
 */
 :root {
   --radius: 999px;
@@ -52,7 +53,7 @@
   --paper: #f7f6f2;
   --paper-2: #ffffff;
   --ink: #0b0f10;
-  --muted-ink: #5d646c;
+  --muted-ink: var(--ink);
   --line: #e7e5de;
 
   --night: #05070a;
@@ -60,7 +61,8 @@
 
   --lohix-lime: #b7e26d;
   --lohix-green: var(--lohix-lime);
-  --lohix-lime-deep: color-mix(in oklab, var(--lohix-lime) 52%, #10160a);
+  /* Accent green for type and icons on LIGHT surfaces: 4.3:1 on paper, 4.6:1 on white. Dark surfaces keep --lohix-lime. */
+  --lohix-lime-deep: #458406;
 
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -185,7 +187,7 @@
     @apply border border-line bg-paper-2 text-ink hover:border-ink;
   }
   .btn-ghost-dark {
-    @apply border border-white/15 bg-white/[0.04] text-white/90 backdrop-blur hover:bg-white/[0.1] hover:border-white/25;
+    @apply border border-white/15 bg-white/[0.04] text-white backdrop-blur hover:bg-white/[0.1] hover:border-white/25;
   }
 
   /* Surfaces */
@@ -199,7 +201,7 @@
     @apply grid gap-px overflow-hidden rounded-[12px] border border-line bg-line;
   }
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-paper-2 px-3 py-1.5 text-[11.5px] text-ink/80;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-paper-2 px-3 py-1.5 text-[11.5px] text-ink;
   }
   /* Grow small pill controls to a comfortable 40px on touch screens. */
   @media (pointer: coarse) {
@@ -218,7 +220,7 @@
     @apply underline decoration-transparent decoration-2 underline-offset-4 transition-[color,text-decoration-color] duration-300 hover:decoration-lohix-lime;
   }
   .chip-dark {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.05] px-3 py-1.5 text-[11.5px] text-white/80 backdrop-blur;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.05] px-3 py-1.5 text-[11.5px] text-white backdrop-blur;
   }
 
   /* Dark stage effects */

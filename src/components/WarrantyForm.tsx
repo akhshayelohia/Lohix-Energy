@@ -1,35 +1,13 @@
 import { useId, useRef, useState } from "react";
 import { focusFirstInvalid, friendlySubmitError, todayISO } from "@/lib/forms";
-import { z } from "zod";
 import { Check, ArrowRight, AlertCircle, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { firstFieldErrors, HONEYPOT_FIELD, warrantySchema } from "@/lib/submissions/schemas";
+import { submitWarranty } from "@/lib/submissions/submit";
 import { useContent } from "@/cms/useContent";
 import { Reveal } from "@/components/Reveal";
 import { Eyebrow } from "@/components/system/Eyebrow";
 import { Accent } from "@/components/system/SectionHeader";
 import { cn } from "@/lib/utils";
-
-const schema = z.object({
-  fullName: z.string().trim().min(2, "Enter your full name").max(80),
-  email: z.string().trim().email("Enter a valid email").max(160),
-  phone: z
-    .string()
-    .trim()
-    .regex(/^[+0-9\s-]{10,15}$/, "Enter a valid phone number"),
-  serial: z
-    .string()
-    .trim()
-    .regex(/^[A-Za-z0-9-]{4,32}$/, "Use 4–32 letters, numbers or dashes, as printed on the pack"),
-  purchaseDate: z
-    .string()
-    .min(1, "Select purchase date")
-    .refine((d) => d <= todayISO(), "Purchase date can't be in the future"),
-  dealer: z.string().trim().min(2, "Dealer name required").max(80),
-  city: z.string().trim().min(2, "City required").max(60),
-  state: z.string().trim().min(2, "Select your state").max(40),
-  vehicleType: z.string().min(1, "Select vehicle type"),
-  consent: z.literal(true, { errorMap: () => ({ message: "Please accept the terms" }) }),
-});
 
 type FormState = {
   fullName: string;
@@ -63,7 +41,7 @@ const VEHICLES = ["E-Rickshaw", "E-Loader", "E-Auto", "EV 2W", "Other"];
 
 // 16px on phones stops iOS from zooming into the field on focus.
 const fieldBase =
-  "mt-2 w-full rounded-none border-b border-line bg-transparent py-3 text-[16px] text-ink outline-none transition-colors placeholder:text-muted-ink/50 focus:border-lohix-lime-deep aria-[invalid=true]:border-red-500 md:py-2.5 md:text-[15px]";
+  "mt-2 w-full rounded-none border-b border-line bg-transparent py-3 text-[16px] text-ink outline-none transition-colors placeholder:text-lohix-lime-deep/60 focus:border-lohix-lime-deep aria-[invalid=true]:border-red-500 md:py-2.5 md:text-[15px]";
 
 export function WarrantyForm() {
   const copy = useContent("warranty");
@@ -73,6 +51,8 @@ export function WarrantyForm() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [emailed, setEmailed] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
 
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) => {
     setForm((f) => ({ ...f, [k]: v }));
@@ -89,36 +69,31 @@ export function WarrantyForm() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null);
-    const result = schema.safeParse(form);
+    const result = warrantySchema.safeParse(form);
     if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
-      for (const issue of result.error.issues) {
-        const key = issue.path[0] as string;
-        if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
-      }
-      setErrors(fieldErrors);
+      setErrors(firstFieldErrors(result.error));
       focusFirstInvalid(formRef.current);
       return;
     }
     setErrors({});
     setSubmitting(true);
-    const { error } = await supabase.from("warranty_submissions").insert({
-      full_name: form.fullName.trim(),
-      email: form.email,
-      phone: form.phone,
-      serial: form.serial.trim().toUpperCase(),
-      purchase_date: form.purchaseDate,
-      dealer: form.dealer,
-      city: form.city,
-      state: form.state,
-      vehicle_type: form.vehicleType,
-    });
-    setSubmitting(false);
-    if (error) {
-      setSubmitError(friendlySubmitError(error));
-      return;
+    try {
+      const res = await submitWarranty({ data: { ...form, [HONEYPOT_FIELD]: honeypot } });
+      if (!res.ok) {
+        if (res.fieldErrors) {
+          setErrors(res.fieldErrors);
+          focusFirstInvalid(formRef.current);
+        }
+        setSubmitError(res.error);
+        return;
+      }
+      setEmailed(res.emailed);
+      setSubmitted(true);
+    } catch (err) {
+      setSubmitError(friendlySubmitError(err as { message?: string }));
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitted(true);
   };
 
   return (
@@ -133,7 +108,7 @@ export function WarrantyForm() {
 
           <ul className="mt-8 space-y-3.5">
             {copy.bullets.map((p) => (
-              <li key={p} className="flex items-start gap-3 text-[14px] text-ink/80">
+              <li key={p} className="flex items-start gap-3 text-[14px] text-ink">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-lohix-lime/30">
                   <Check className="h-3 w-3 text-lohix-lime-deep" />
                 </span>
@@ -154,13 +129,21 @@ export function WarrantyForm() {
               </h3>
               <p className="t-small mt-2 max-w-sm text-muted-ink">
                 Thanks, {form.fullName.trim().split(" ")[0]}. We've recorded serial{" "}
-                <span className="tnum text-ink">{form.serial.trim().toUpperCase()}</span>. Keep your
-                purchase invoice safe for any claim.
+                <span className="tnum text-ink">{form.serial.trim().toUpperCase()}</span>.{" "}
+                {emailed ? (
+                  <>
+                    A confirmation is on its way to{" "}
+                    <span className="text-ink">{form.email.trim()}</span>.
+                  </>
+                ) : (
+                  "Keep your purchase invoice safe for any claim."
+                )}
               </p>
               <button
                 type="button"
                 onClick={() => {
                   setForm(initial);
+                  setEmailed(false);
                   setSubmitted(false);
                 }}
                 className="btn btn-outline btn-sm mt-8"
@@ -171,6 +154,17 @@ export function WarrantyForm() {
             </div>
           ) : (
             <form ref={formRef} onSubmit={onSubmit} noValidate className="space-y-8">
+              {/* Spam trap: hidden from people, often filled in by bots. */}
+              <input
+                type="text"
+                name={HONEYPOT_FIELD}
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="absolute -left-[9999px] h-px w-px opacity-0"
+              />
               <div className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
                 <Field id={id("fullName")} label="Full name" error={errors.fullName}>
                   <input

@@ -1,25 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any --
+   Schema-driven editor for arbitrary CMS JSON: field values are whatever shape
+   the section schema describes, so they are typed loosely on purpose. */
 import { ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { MediaPicker } from "./MediaPicker";
 import { ICON_OPTIONS, type Field } from "./schemas";
 import { getIcon } from "./icons";
-
-type Value = unknown;
-
-function setAt(obj: any, path: (string | number)[], value: Value): any {
-  if (path.length === 0) return value;
-  const [head, ...rest] = path;
-  if (Array.isArray(obj)) {
-    const copy = obj.slice();
-    copy[head as number] = setAt(copy[head as number], rest, value);
-    return copy;
-  }
-  return { ...(obj ?? {}), [head]: setAt(obj?.[head as string], rest, value) };
-}
-
-function getAt(obj: any, path: (string | number)[]): any {
-  return path.reduce((acc, k) => (acc == null ? acc : acc[k as any]), obj);
-}
 
 export function FormRenderer({
   schema,

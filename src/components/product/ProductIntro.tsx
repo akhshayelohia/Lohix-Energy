@@ -64,7 +64,7 @@ export function ProductIntro({
           </Reveal>
 
           <Reveal delay={0.1} className="lg:col-span-5 lg:pb-4">
-            <p className="t-lead text-white/65">{tagline}</p>
+            <p className="t-lead text-white">{tagline}</p>
 
             {badges.length > 0 && (
               <ul className="mt-6 flex flex-wrap gap-2">
@@ -97,7 +97,7 @@ export function ProductIntro({
                 href={safeHref(datasheetUrl)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-5 inline-flex items-center gap-2 text-[12.5px] text-white/55 transition-colors hover:text-lohix-lime"
+                className="mt-5 inline-flex items-center gap-2 text-[12.5px] text-white transition-colors hover:text-lohix-lime"
               >
                 <Download className="h-3.5 w-3.5" />
                 Download full datasheet

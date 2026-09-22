@@ -31,7 +31,7 @@ export function PartnerSteps({ label, steps }: { label?: string; steps: Step[] }
 
   return (
     <div className="relative mx-auto w-full max-w-[520px]" onMouseLeave={() => setPaused(false)}>
-      {label && <p className="t-label mb-5 text-white/50">{label}</p>}
+      {label && <p className="t-label mb-5 text-white">{label}</p>}
 
       <div className="relative">
         <div aria-hidden className="absolute bottom-9 left-[35px] top-9 w-px bg-white/10">
@@ -67,7 +67,7 @@ export function PartnerSteps({ label, steps }: { label?: string; steps: Step[] }
                       "tnum relative z-10 flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border text-[12px] font-semibold transition-colors duration-300",
                       on || done
                         ? "border-lohix-lime bg-lohix-lime text-ink"
-                        : "border-white/20 bg-night text-white/60",
+                        : "border-white/20 bg-night text-white",
                     )}
                   >
                     {done ? <Check className="h-4 w-4" /> : s.n}
@@ -76,7 +76,7 @@ export function PartnerSteps({ label, steps }: { label?: string; steps: Step[] }
                     <span
                       className={cn(
                         "block text-[16px] font-semibold tracking-[-0.01em] transition-colors",
-                        on ? "text-white" : "text-white/60",
+                        on ? "text-white" : "text-white",
                       )}
                     >
                       {s.t}
@@ -91,7 +91,7 @@ export function PartnerSteps({ label, steps }: { label?: string; steps: Step[] }
                           transition={{ duration: 0.35, ease }}
                           className="block overflow-hidden"
                         >
-                          <span className="t-small block pb-1 pt-1.5 text-white/60">{s.b}</span>
+                          <span className="t-small block pb-1 pt-1.5 text-white">{s.b}</span>
                         </motion.span>
                       )}
                     </AnimatePresence>

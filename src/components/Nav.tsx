@@ -122,10 +122,10 @@ export function Nav() {
       dark
         ? active
           ? "bg-white/10 text-white"
-          : "text-white/65 hover:bg-white/[0.06] hover:text-white"
+          : "text-white hover:bg-white/[0.06] hover:text-white"
         : active
           ? "bg-black/[0.06] text-ink"
-          : "text-ink/65 hover:bg-black/[0.04] hover:text-ink",
+          : "text-ink hover:bg-black/[0.04] hover:text-ink",
     );
 
   return (
@@ -314,7 +314,7 @@ export function Nav() {
                     <a
                       href={l.href}
                       aria-current={pathname === l.href ? "page" : undefined}
-                      className="flex items-center justify-between rounded-[10px] px-4 py-3 text-[14px] font-medium text-ink/80 hover:bg-paper hover:text-ink aria-[current=page]:text-ink"
+                      className="flex items-center justify-between rounded-[10px] px-4 py-3 text-[14px] font-medium text-ink hover:bg-paper hover:text-ink aria-[current=page]:text-ink"
                     >
                       {l.label}
                       {pathname === l.href && (

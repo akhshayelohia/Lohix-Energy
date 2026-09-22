@@ -15,7 +15,9 @@ type Props = {
 };
 
 export function Accent({ children, tone = "light" }: { children: ReactNode; tone?: Tone }) {
-  return <span className={tone === "dark" ? "text-lohix-lime" : "text-muted-ink"}>{children}</span>;
+  return (
+    <span className={tone === "dark" ? "text-lohix-lime" : "text-lohix-lime-deep"}>{children}</span>
+  );
 }
 
 export function SectionHeader({
@@ -44,7 +46,7 @@ export function SectionHeader({
     </>
   );
   const asideEl = aside ? (
-    <div className={cn("t-body max-w-md", dark ? "text-white/60" : "text-muted-ink")}>{aside}</div>
+    <div className={cn("t-body max-w-md", dark ? "text-white" : "text-muted-ink")}>{aside}</div>
   ) : null;
 
   if (layout === "center") {

@@ -156,7 +156,7 @@ export function RoadTimeline({
             <p className="mt-2 text-[17px] font-semibold leading-snug text-white">
               {current.title}
             </p>
-            <p className="t-small mt-1.5 line-clamp-3 text-white/60">{current.body}</p>
+            <p className="t-small mt-1.5 line-clamp-3 text-white">{current.body}</p>
           </motion.div>
         </AnimatePresence>
         <div className="mt-3 flex gap-1.5">
@@ -181,7 +181,7 @@ export function RoadTimeline({
               {place}
             </p>
           )}
-          {coordinates && <p className="t-label tnum mt-1 text-white/45">{coordinates}</p>}
+          {coordinates && <p className="t-label tnum mt-1 text-white">{coordinates}</p>}
         </div>
       )}
     </div>

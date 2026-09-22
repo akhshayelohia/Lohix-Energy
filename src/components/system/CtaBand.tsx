@@ -38,7 +38,7 @@ export function CtaBand({ eyebrow, title, accent, body, primary, secondary }: Pr
                   </>
                 )}
               </h2>
-              {body && <p className="t-body mt-5 max-w-lg text-white/55">{body}</p>}
+              {body && <p className="t-body mt-5 max-w-lg text-white">{body}</p>}
             </div>
             {(primary || secondary) && (
               <div className="flex flex-col gap-3 sm:flex-row md:col-span-4 md:flex-col md:items-end">

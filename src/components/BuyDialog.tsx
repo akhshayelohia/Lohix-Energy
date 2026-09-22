@@ -52,12 +52,12 @@ export function BuyDialog() {
             <DialogPrimitive.Title className="relative mt-3 text-[26px] font-semibold leading-[1.1] tracking-[-0.025em]">
               {c.heading}
             </DialogPrimitive.Title>
-            <DialogPrimitive.Description className="t-small relative mt-2 text-white/65">
+            <DialogPrimitive.Description className="t-small relative mt-2 text-white">
               {c.body}
             </DialogPrimitive.Description>
             <DialogPrimitive.Close
               aria-label="Close"
-              className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+              className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 hover:text-white"
             >
               <X className="h-4 w-4" />
             </DialogPrimitive.Close>

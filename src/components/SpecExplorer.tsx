@@ -87,9 +87,7 @@ export function SpecExplorer({ items, hint, cta }: Props) {
                   >
                     <div className="flex items-center justify-between">
                       <Icon className={cn("h-4 w-4", isActive ? "text-lohix-lime" : "text-ink")} />
-                      <span
-                        className={cn("t-label", isActive ? "text-white/45" : "text-muted-ink")}
-                      >
+                      <span className={cn("t-label", isActive ? "text-white" : "text-muted-ink")}>
                         {item.label}
                       </span>
                     </div>
@@ -101,7 +99,7 @@ export function SpecExplorer({ items, hint, cta }: Props) {
                         <span
                           className={cn(
                             "text-[12px] leading-tight",
-                            isActive ? "text-white/60" : "text-muted-ink",
+                            isActive ? "text-white" : "text-muted-ink",
                           )}
                         >
                           {item.unit}
@@ -141,7 +139,7 @@ export function SpecExplorer({ items, hint, cta }: Props) {
               >
                 <div className="flex items-center justify-between">
                   <span className="chip-dark">{activeItem.category}</span>
-                  <span className="t-label tnum text-white/35">
+                  <span className="t-label tnum text-white">
                     {String(activeIndex + 1).padStart(2, "0")} /{" "}
                     {String(items.length).padStart(2, "0")}
                   </span>
@@ -154,13 +152,13 @@ export function SpecExplorer({ items, hint, cta }: Props) {
                     {activeItem.value}
                   </span>
                   {activeItem.unit && (
-                    <span className="text-[16px] text-white/55">{activeItem.unit}</span>
+                    <span className="text-[16px] text-white">{activeItem.unit}</span>
                   )}
                 </div>
                 <h3 className="mt-6 text-[20px] font-semibold tracking-[-0.015em]">
                   {activeItem.title}
                 </h3>
-                <p className="t-small mt-2 max-w-sm text-white/60">{activeItem.body}</p>
+                <p className="t-small mt-2 max-w-sm text-white">{activeItem.body}</p>
                 <div className="mt-auto pt-8">
                   {cta ? (
                     <ButtonLink href={cta.href} variant="lime" size="sm" icon="external">
@@ -168,7 +166,7 @@ export function SpecExplorer({ items, hint, cta }: Props) {
                     </ButtonLink>
                   ) : (
                     <div className="flex items-center justify-between border-t border-white/10 pt-5">
-                      <span className="t-label text-white/40">Parameter</span>
+                      <span className="t-label text-white">Parameter</span>
                       <span className="text-[12.5px] font-medium">{activeItem.label}</span>
                     </div>
                   )}

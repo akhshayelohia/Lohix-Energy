@@ -61,7 +61,7 @@ export function ProductSpotlight({
             <span className="tnum block text-[22px] font-semibold leading-none tracking-[-0.02em] text-white">
               {c.k}
             </span>
-            <span className="t-label mt-2 flex items-center gap-1.5 text-white/55">
+            <span className="t-label mt-2 flex items-center gap-1.5 text-white">
               {c.v}
               {c.href && (
                 <ArrowDown className="h-3 w-3 transition-transform duration-300 group-hover:translate-y-0.5" />

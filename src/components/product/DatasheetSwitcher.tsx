@@ -89,7 +89,7 @@ export function DatasheetSwitcher({ models, downloadLabel, requestLabel, viewLab
                         "tap tnum whitespace-nowrap rounded-full border px-4 py-2 text-[13px] font-medium transition-colors",
                         on
                           ? "border-ink bg-ink text-lohix-lime"
-                          : "border-line bg-paper-2 text-ink/75 hover:border-ink/30 hover:text-ink",
+                          : "border-line bg-paper-2 text-ink hover:border-ink/30 hover:text-ink",
                       )}
                     >
                       {m.label}
