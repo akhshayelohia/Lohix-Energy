@@ -6,6 +6,7 @@ import { Reveal } from "@/components/Reveal";
 import { PageHero } from "@/components/system/PageHero";
 import { ProductSpotlight } from "@/components/hero/ProductSpotlight";
 import { SectionHeader } from "@/components/system/SectionHeader";
+import { Eyebrow } from "@/components/system/Eyebrow";
 import { ButtonLink } from "@/components/system/ButtonLink";
 import { CtaBand } from "@/components/system/CtaBand";
 import { ProductCard } from "@/components/product/ProductCard";
@@ -236,6 +237,59 @@ function ProductsPage() {
           </Reveal>
         </div>
       </section>
+
+      {/* COMING SOON */}
+      {c.comingSoon?.heading && (
+        <section id="coming-soon" className="bg-paper py-12 sm:py-20 md:py-28">
+          <div className="container-x">
+            <Reveal className="panel-dark px-6 py-10 sm:px-10 sm:py-14 md:px-16 md:py-20">
+              <div aria-hidden className="pointer-events-none absolute inset-0">
+                <div className="stage-grid absolute inset-0 opacity-70" />
+                <div className="absolute -right-32 -top-40 h-[480px] w-[520px] rounded-full bg-lohix-lime/[0.16] blur-[140px]" />
+              </div>
+              <div className="relative grid gap-10 md:grid-cols-12 md:items-start">
+                <div className="md:col-span-6">
+                  <Eyebrow tone="dark" dot>
+                    {c.comingSoon.label}
+                  </Eyebrow>
+                  <h2 className="t-h2 mt-5 max-w-xl text-balance text-white">
+                    {c.comingSoon.heading}
+                  </h2>
+                  {c.comingSoon.body && (
+                    <p className="t-body mt-5 max-w-lg text-white">{c.comingSoon.body}</p>
+                  )}
+                  {c.comingSoon.cta?.label && (
+                    <div className="mt-8">
+                      <ButtonLink href={c.comingSoon.cta.href} variant="lime" icon="arrow">
+                        {c.comingSoon.cta.label}
+                      </ButtonLink>
+                    </div>
+                  )}
+                </div>
+
+                <div className="md:col-span-6">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {(c.comingSoon.packs ?? []).map((p, i) => (
+                      <div
+                        key={`${p.voltage}-${i}`}
+                        className="rounded-[16px] border border-dashed border-white/25 p-6 sm:p-7"
+                      >
+                        <div className="tnum text-[40px] font-semibold leading-none tracking-[-0.035em] text-white">
+                          {p.voltage}
+                        </div>
+                        <div className="tnum t-small mt-3 text-white">{p.capacities}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {c.comingSoon.note && (
+                    <p className="t-small mt-5 text-white">{c.comingSoon.note}</p>
+                  )}
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+      )}
 
       {/* ESTIMATOR */}
       <section id="estimator" className="section bg-paper">

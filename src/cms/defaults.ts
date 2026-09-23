@@ -887,6 +887,9 @@ export type RangeContent = {
   highlight: string;
   body: string;
   linkPrefix: string;
+  /** Small line under the category cards. Blank hides it. */
+  comingSoonNote: string;
+  comingSoonLink: Link;
 };
 
 export const rangeDefault: RangeContent = {
@@ -895,6 +898,8 @@ export const rangeDefault: RangeContent = {
   highlight: "Four for two wheels.",
   body: "From full-shift e-rickshaw packs to everyday two-wheeler power — every LOHIX battery is built on LiFePO4 chemistry and a smart BMS.",
   linkPrefix: "Explore",
+  comingSoonNote: "Coming soon: E-Loader packs — 60V and 72V, 125 / 150 / 200 Ah.",
+  comingSoonLink: { label: "See what's coming", href: "/products#coming-soon" },
 };
 
 export type BuyDialogContent = {
@@ -954,6 +959,15 @@ export type ProductsPageContent = {
   rangeEyebrow: string;
   viewAllLabel: string;
   stickyBuyLabel: string;
+  // Announcement band for packs that are not on sale yet. Blank heading hides it.
+  comingSoon: {
+    label: string;
+    heading: string;
+    body: string;
+    packs: { voltage: string; capacities: string }[];
+    note: string;
+    cta: Link;
+  };
 };
 
 export const productsPageDefault: ProductsPageContent = {
@@ -1000,6 +1014,17 @@ export const productsPageDefault: ProductsPageContent = {
   rangeEyebrow: "The range",
   viewAllLabel: "View all products",
   stickyBuyLabel: "Where to buy",
+  comingSoon: {
+    label: "Coming soon",
+    heading: "E-Loader battery packs.",
+    body: "Higher-voltage LiFePO4 packs for electric loaders are on the way, built on the same smart BMS and cell quality as the rest of the LOHIX range.",
+    packs: [
+      { voltage: "60V", capacities: "125 · 150 · 200 Ah" },
+      { voltage: "72V", capacities: "125 · 150 · 200 Ah" },
+    ],
+    note: "Specifications are being finalised. Dealers and fleet buyers can register interest now.",
+    cta: { label: "Talk to our team", href: "#buy" },
+  },
 };
 
 export type EmailsContent = {

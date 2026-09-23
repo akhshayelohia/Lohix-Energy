@@ -399,6 +399,13 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
       type: "text",
       help: "Followed by the category name, e.g. 'Explore 2W Batteries'. Cards, names and figures come from the product sections.",
     },
+    {
+      key: "comingSoonNote",
+      label: "Coming soon line",
+      type: "text",
+      help: "One line under the two category cards, for packs that are not on sale yet. Leave blank to hide it. The band it links to is edited under 'All products page'.",
+    },
+    ctaGroup("comingSoonLink", "Coming soon line · link"),
   ],
 
   products_page: [
@@ -486,6 +493,35 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
       label: "Product pages · phone buy bar button",
       type: "text",
       help: "The bar that slides up on phones once the product intro scrolls away. It always opens the Where to buy pop-up.",
+    },
+    {
+      key: "comingSoon",
+      label: "Coming soon band",
+      type: "group",
+      help: "The announcement band on /products for packs that are not on sale yet. Clear the heading to hide the whole band.",
+      fields: [
+        { key: "label", label: "Chip", type: "text" },
+        { key: "heading", label: "Heading", type: "text" },
+        { key: "body", label: "Body copy", type: "textarea", rows: 3 },
+        {
+          key: "packs",
+          label: "Packs",
+          type: "list",
+          itemType: "group",
+          itemLabel: "Pack",
+          fields: [
+            { key: "voltage", label: "Voltage", type: "text", placeholder: "60V" },
+            {
+              key: "capacities",
+              label: "Capacities",
+              type: "text",
+              placeholder: "125 · 150 · 200 Ah",
+            },
+          ],
+        },
+        { key: "note", label: "Small print", type: "text" },
+        ctaGroup("cta", "Button"),
+      ],
     },
   ],
 
