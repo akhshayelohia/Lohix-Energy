@@ -887,8 +887,7 @@ export type RangeContent = {
   highlight: string;
   body: string;
   linkPrefix: string;
-  /** Small line under the category cards. Blank hides it. */
-  comingSoonNote: string;
+  /** Link on the "coming soon" card under the category cards. */
   comingSoonLink: Link;
 };
 
@@ -898,7 +897,6 @@ export const rangeDefault: RangeContent = {
   highlight: "Four for two wheels.",
   body: "From full-shift e-rickshaw packs to everyday two-wheeler power — every LOHIX battery is built on LiFePO4 chemistry and a smart BMS.",
   linkPrefix: "Explore",
-  comingSoonNote: "Coming soon: E-Loader packs — 60V and 72V, 125 / 150 / 200 Ah.",
   comingSoonLink: { label: "See what's coming", href: "/products#coming-soon" },
 };
 

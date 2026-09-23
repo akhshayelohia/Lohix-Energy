@@ -4,6 +4,7 @@ import { useContent } from "@/cms/useContent";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeader } from "@/components/system/SectionHeader";
 import { PackRender } from "@/components/product/PackRender";
+import { ComingSoonBand } from "@/components/ComingSoonBand";
 
 function uniq(values: (string | undefined)[]) {
   return Array.from(new Set(values.filter(Boolean))) as string[];
@@ -90,22 +91,7 @@ export function RangeShowcase() {
           })}
         </div>
 
-        {c.comingSoonNote && (
-          <Reveal className="mt-6 md:mt-8">
-            <div className="card flex flex-col gap-2 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
-              <p className="tnum t-small text-ink">{c.comingSoonNote}</p>
-              {c.comingSoonLink?.label && (
-                <a
-                  href={c.comingSoonLink.href}
-                  className="group inline-flex shrink-0 items-center gap-1.5 text-[13px] font-medium text-lohix-lime-deep"
-                >
-                  {c.comingSoonLink.label}
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-                </a>
-              )}
-            </div>
-          </Reveal>
-        )}
+        <ComingSoonBand compact link={c.comingSoonLink} className="mt-4" />
       </div>
     </section>
   );

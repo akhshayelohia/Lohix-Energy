@@ -399,13 +399,7 @@ export const SCHEMAS: Record<SectionKey, Field[]> = {
       type: "text",
       help: "Followed by the category name, e.g. 'Explore 2W Batteries'. Cards, names and figures come from the product sections.",
     },
-    {
-      key: "comingSoonNote",
-      label: "Coming soon line",
-      type: "text",
-      help: "One line under the two category cards, for packs that are not on sale yet. Leave blank to hide it. The band it links to is edited under 'All products page'.",
-    },
-    ctaGroup("comingSoonLink", "Coming soon line · link"),
+    ctaGroup("comingSoonLink", "Coming soon card · link"),
   ],
 
   products_page: [
