@@ -38,10 +38,8 @@ export function ProductIntro({
   datasheetUrl,
 }: ProductIntroProps) {
   // "LOHIX 48" sets the full size; longer names shrink so the line always fits.
-  const fit = Math.min(
-    1,
-    8 / (stacked ? Math.max(brand.length, model.length) : brand.length + 1 + model.length),
-  );
+  // Stacked titles keep the same size as the one-line version.
+  const fit = Math.min(1, 8 / (brand.length + 1 + model.length));
 
   return (
     <section id={id} className="relative isolate overflow-hidden bg-night text-white">
