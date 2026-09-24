@@ -14,6 +14,8 @@ export type ProductIntroProps = {
   eyebrow: string;
   brand: string;
   model: string;
+  /** Put the brand and model on two lines (long model names). */
+  stacked?: boolean;
   tagline: string;
   badges: string[];
   keyFigures: KeyFigure[];
@@ -27,6 +29,7 @@ export function ProductIntro({
   eyebrow,
   brand,
   model,
+  stacked = false,
   tagline,
   badges,
   keyFigures,
@@ -35,7 +38,10 @@ export function ProductIntro({
   datasheetUrl,
 }: ProductIntroProps) {
   // "LOHIX 48" sets the full size; longer names shrink so the line always fits.
-  const fit = Math.min(1, 8 / (brand.length + 1 + model.length));
+  const fit = Math.min(
+    1,
+    8 / (stacked ? Math.max(brand.length, model.length) : brand.length + 1 + model.length),
+  );
 
   return (
     <section id={id} className="relative isolate overflow-hidden bg-night text-white">
@@ -53,7 +59,8 @@ export function ProductIntro({
               style={{ "--fit": fit } as CSSProperties}
               className="t-display mt-7 whitespace-nowrap text-[clamp(28px,calc(17vw*var(--fit)),calc(148px*var(--fit)))] lg:text-[min(calc(11vw*var(--fit)),calc(148px*var(--fit)))]"
             >
-              {brand}{" "}
+              {brand}
+              {stacked ? <br /> : " "}
               <span
                 key={model}
                 className="animate-rise tnum inline-block normal-case text-lohix-lime"

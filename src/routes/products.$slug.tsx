@@ -112,6 +112,7 @@ function SkuPage() {
         eyebrow: tw.categoryEyebrow,
         brand: "LOHIX",
         model: skuModel(sku),
+        stacked: true,
         tagline: sku.overview,
         badges: sku.badges,
         keyFigures: sku.keyFigures,
