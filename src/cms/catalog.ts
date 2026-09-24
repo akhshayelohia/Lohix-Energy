@@ -74,7 +74,7 @@ export function useCatalog(): CatalogCategory[] {
         model: skuModel(s),
         voltage: s.voltage,
         capacity: s.capacity,
-        image: firstMedia(s.heroImage, s.showcaseImage),
+        image: firstMedia(s.showcaseImage, s.heroImage),
         figures: s.keyFigures.slice(2, 4),
         blurb: s.overview,
       })),
