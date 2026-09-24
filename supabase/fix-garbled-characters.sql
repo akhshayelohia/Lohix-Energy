@@ -1,6 +1,6 @@
 -- Repairs two symbols that were garbled when pending-paste.sql went through the Windows clipboard:
---   em dash  (shown as "GammaCo..")  ->  —
---   middle dot (shown as box glyphs) ->  ·
+--   em dash  (shown as GammaCo..)  ->  em dash
+--   middle dot (shown as box glyphs)  ->  middle dot
 -- This file is plain ASCII on purpose, so it survives copy/paste. Safe to run more than once.
 
 BEGIN;
